@@ -1,125 +1,155 @@
 # Ticketera · Sistema de gestión de tickets para soporte TI
 
 <p align="left">
-  <img src="https://img.shields.io/badge/C%23-.NET-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt="C# / .NET">
-  <img src="https://img.shields.io/badge/ASP.NET-MVC-5C2D91?style=for-the-badge&logo=dotnet&logoColor=white" alt="ASP.NET MVC">
-  <img src="https://img.shields.io/badge/SQL%20Server-Database-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white" alt="SQL Server">
-  <img src="https://img.shields.io/badge/Entity%20Framework-6-68217A?style=for-the-badge" alt="Entity Framework 6">
-  <img src="https://img.shields.io/badge/Excel-ClosedXML-217346?style=for-the-badge&logo=microsoftexcel&logoColor=white" alt="Excel / ClosedXML">
+  <img src="https://img.shields.io/badge/C%23-.NET-6A5ACD?style=for-the-badge&logo=csharp&logoColor=white" alt="C#" />
+  <img src="https://img.shields.io/badge/ASP.NET-MVC%205-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt="ASP.NET MVC 5" />
+  <img src="https://img.shields.io/badge/Entity%20Framework-6-7A3E9D?style=for-the-badge" alt="Entity Framework 6" />
+  <img src="https://img.shields.io/badge/SQL%20Server-Database-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white" alt="SQL Server" />
+  <img src="https://img.shields.io/badge/ClosedXML-Excel-217346?style=for-the-badge" alt="ClosedXML" />
 </p>
 
-**Proyecto académico de desarrollo web orientado a centralizar, organizar y dar trazabilidad a la atención de incidencias de soporte TI.**
+Proyecto académico orientado a construir una **solución web de Mesa de Servicio (Help Desk)** para centralizar la atención de incidencias de soporte TI. La aplicación transforma requerimientos dispersos en **tickets trazables**, clasificables por urgencia, asignables al personal de soporte y visibles mediante un **dashboard operativo**.
 
-[🌐 Ver portafolio](https://arcan.freedev.app/) · [💼 LinkedIn](https://www.linkedin.com/in/gustavo-silva-12b76a408) · [👨‍💻 GitHub](https://github.com/jsilvaPro)
+🔗 **Enlaces**
+- 🌐 **Portafolio:** [arcan.freedev.app](https://arcan.freedev.app)
+- 💼 **LinkedIn:** [José Gustavo Silva Medrano](https://www.linkedin.com/in/jose-gustavo-silva-medrano/)
+- 👨‍💻 **GitHub:** [@jsilvaPro](https://github.com/jsilvaPro)
 
 ---
 
+## Vista general del proyecto
+
 <p align="center">
-  <img src="docs/images/dashboard.png" alt="Dashboard principal de Ticketera" width="92%">
+  <img src="docs/img/dashboard-ticketera.png" alt="Dashboard principal de Ticketera" width="900" />
 </p>
 
-## Descripción
+<p align="center">
+  <em>Dashboard con indicadores para visualizar el estado general de la operación.</em>
+</p>
 
-**Ticketera** es un sistema web de Mesa de Servicio (Help Desk) que centraliza la gestión de incidencias mediante tickets trazables. La solución permite registrar solicitudes, clasificarlas por estado y nivel de urgencia, asignarlas al personal de soporte y realizar seguimiento durante su ciclo de atención.
+### ¿Qué resuelve?
 
-El sistema integra en una misma aplicación la administración de **tickets, empresas, contactos, usuarios y roles**, complementándola con un **dashboard de indicadores operativos**, adjuntos, notificaciones por correo electrónico e importación masiva de información desde Excel.
+Muchas incidencias de soporte se gestionan por mensajes, correos o solicitudes verbales, lo que genera pérdida de información, poca trazabilidad y seguimiento ineficiente. **Ticketera** propone un flujo ordenado donde cada solicitud:
 
-> El objetivo del proyecto es transformar solicitudes de soporte dispersas en un flujo de atención más ordenado, visible y controlado.
+- se registra como un **ticket único**,
+- se clasifica por **estado y nivel de urgencia**,
+- puede asignarse al **personal de soporte**,
+- queda asociada a **empresas y contactos**,
+- y se monitorea desde un **panel de control**.
 
-## Flujo general
+> **Objetivo del proyecto:** demostrar capacidad para diseñar y desarrollar una solución funcional que combine interfaz web, lógica de negocio, persistencia de datos, notificaciones e importación de información desde Excel.
+
+---
+
+## Flujo funcional
 
 ```mermaid
 flowchart LR
     A[Usuario / Cliente] --> B[Registro del ticket]
-    B --> C[Clasificación por urgencia y estado]
-    C --> D[Asignación al personal de soporte]
-    D --> E[Seguimiento de la atención]
-    E --> F[Resolución / Cierre]
-    B --> G[Dashboard e indicadores]
-    H[Empresas y contactos] --> B
-    I[Usuarios y roles] --> D
+    C[Empresa y contacto] --> B
+    B --> D[Clasificación por estado y urgencia]
+    B --> E[Asignación al personal de soporte]
+    E --> F[Seguimiento de atención]
+    D --> F
+    F --> G[Dashboard e indicadores]
+    F --> H[Resolución y cierre]
 ```
+
+---
 
 ## Funcionalidades principales
 
-- Autenticación de usuarios.
-- Registro y seguimiento de tickets de soporte.
-- Clasificación por estado y nivel de urgencia.
-- Asignación de tickets al personal de soporte.
-- Administración de empresas y contactos.
-- Gestión de usuarios y roles.
-- Dashboard con indicadores operativos.
-- Adjuntos asociados a tickets.
-- Notificaciones por correo electrónico.
-- Recuperación y cambio de contraseña.
-- Importación masiva de empresas y contactos desde Excel.
+- **Autenticación de usuarios**.
+- **Registro y seguimiento de tickets** de soporte.
+- **Clasificación por estado y nivel de urgencia**.
+- **Asignación de tickets** al personal de soporte.
+- **Administración de empresas y contactos**.
+- **Gestión de usuarios y roles**.
+- **Dashboard con indicadores operativos**.
+- **Adjuntos asociados a tickets**.
+- **Notificaciones por correo electrónico**.
+- **Recuperación y cambio de contraseña**.
+- **Importación masiva de empresas y contactos desde Excel**.
+
+---
 
 ## Capturas del sistema
 
 <table>
   <tr>
-    <td width="50%">
-      <img src="docs/images/login.png" alt="Pantalla de inicio de sesión">
-      <br><b>Inicio de sesión</b><br>
+    <td width="50%" valign="top">
+      <img src="docs/img/login-ticketera.png" alt="Pantalla de inicio de sesión" width="100%" />
+      <br />
+      <strong>Inicio de sesión</strong><br />
       Acceso al sistema mediante usuario y contraseña.
     </td>
-    <td width="50%">
-      <img src="docs/images/seguimiento-tickets.png" alt="Seguimiento de tickets">
-      <br><b>Seguimiento de tickets</b><br>
-      Resumen operativo y visualización de incidencias registradas.
+    <td width="50%" valign="top">
+      <img src="docs/img/seguimiento-tickets.png" alt="Seguimiento de tickets" width="100%" />
+      <br />
+      <strong>Seguimiento de tickets</strong><br />
+      Vista operativa para monitorear incidencias registradas.
     </td>
   </tr>
   <tr>
-    <td width="50%">
-      <img src="docs/images/empresas.png" alt="Gestión de empresas">
-      <br><b>Empresas</b><br>
+    <td width="50%" valign="top">
+      <img src="docs/img/gestion-empresas.png" alt="Gestión de empresas" width="100%" />
+      <br />
+      <strong>Empresas</strong><br />
       Administración de organizaciones atendidas por el sistema.
     </td>
-    <td width="50%">
-      <img src="docs/images/contactos.png" alt="Gestión de contactos">
-      <br><b>Contactos</b><br>
+    <td width="50%" valign="top">
+      <img src="docs/img/gestion-contactos.png" alt="Gestión de contactos" width="100%" />
+      <br />
+      <strong>Contactos</strong><br />
       Personas de contacto asociadas a cada empresa.
     </td>
   </tr>
   <tr>
-    <td width="50%">
-      <img src="docs/images/usuarios.png" alt="Gestión de usuarios y roles">
-      <br><b>Usuarios y roles</b><br>
-      Administración de accesos, roles, estado y acciones de usuario.
+    <td width="50%" valign="top">
+      <img src="docs/img/usuarios-roles.png" alt="Gestión de usuarios y roles" width="100%" />
+      <br />
+      <strong>Usuarios y roles</strong><br />
+      Administración de accesos, roles, estado y acciones del usuario.
     </td>
-    <td width="50%">
-      <img src="docs/images/codigo-visual-studio.png" alt="Código del proyecto en Visual Studio">
-      <br><b>Desarrollo</b><br>
-      Proyecto desarrollado en Visual Studio con C# y ASP.NET MVC.
+    <td width="50%" valign="top">
+      <img src="docs/img/visual-studio-ticketera.png" alt="Código del proyecto en Visual Studio" width="100%" />
+      <br />
+      <strong>Desarrollo</strong><br />
+      Proyecto implementado en Visual Studio con C# y ASP.NET MVC.
     </td>
   </tr>
 </table>
 
+---
+
 ## Funcionalidad destacada · Importación masiva desde Excel
 
-La solución incorpora una opción para cargar **empresas y contactos desde archivos Excel**, reduciendo el registro manual y conectando el procesamiento del archivo con la lógica de aplicación y la persistencia de datos.
-
 <p align="center">
-  <img src="docs/images/importacion-excel.png" alt="Importación masiva desde Excel" width="88%">
+  <img src="docs/img/importacion-excel.png" alt="Importación masiva desde Excel" width="850" />
 </p>
 
-Esta funcionalidad integra:
+La solución incorpora una opción para **cargar empresas y contactos desde archivos Excel**, reduciendo el registro manual y conectando el procesamiento del archivo con la lógica de la aplicación y la persistencia de datos.
 
+**Esta funcionalidad integra:**
 - Lectura de información desde archivos `.xlsx`.
 - Procesamiento mediante **ClosedXML**.
 - Registro de empresas y contactos.
 - Integración con la información administrada por el sistema.
 
+---
+
 ## Tecnologías
 
 | Área | Tecnología |
-|---|---|
+|------|------------|
 | Backend | C# · ASP.NET MVC 5 · .NET Framework 4.8 |
 | ORM | Entity Framework 6 |
 | Base de datos | SQL Server / LocalDB |
 | Frontend | HTML · CSS · JavaScript · Bootstrap |
 | Archivos Excel | ClosedXML |
 | IDE | Visual Studio |
+
+---
 
 ## Arquitectura general
 
@@ -128,8 +158,8 @@ La solución sigue el patrón **MVC (Model–View–Controller)**:
 - **Models:** entidades, ViewModels y acceso a datos.
 - **Views:** interfaz de usuario.
 - **Controllers:** flujo de solicitudes y lógica de aplicación.
-- **Services:** funcionalidades complementarias, como correo y notificaciones.
-- **SQL Server:** persistencia de información mediante Entity Framework.
+- **Services:** servicios complementarios como correo y notificaciones.
+- **SQL Server:** persistencia de la información mediante Entity Framework.
 
 ```text
 Interfaz web / Views
@@ -144,13 +174,15 @@ Models / Entity Framework
 SQL Server
 ```
 
+---
+
 ## Configuración local
 
 1. Clona el repositorio:
 
-   ```bash
-   git clone https://github.com/jsilvaPro/ticketera-helpdesk.git
-   ```
+```bash
+git clone https://github.com/jsilvaPro/ticketera-helpdesk.git
+```
 
 2. Abre `Ticketera/Ticketera.sln` en Visual Studio.
 3. Restaura los paquetes NuGet definidos en `packages.config`.
@@ -168,7 +200,9 @@ El repositorio **no incluye credenciales reales**. En `Ticketera/Web.config` se 
 <add key="SmtpPass" value="YOUR_GMAIL_APP_PASSWORD" />
 ```
 
-Sustituye estos valores únicamente en tu entorno local. **Nunca publiques contraseñas, App Passwords ni credenciales reales.**
+Sustituye estos valores **únicamente en tu entorno local**. Nunca publiques contraseñas, App Passwords ni credenciales reales.
+
+---
 
 ## Seguridad del repositorio
 
@@ -176,23 +210,27 @@ Se excluyeron del repositorio archivos generados por Visual Studio, binarios, pa
 
 Consulta [`SECURITY.md`](SECURITY.md) para más información.
 
+---
+
 ## Estado del proyecto
 
 Proyecto académico y de aprendizaje. Su objetivo es aplicar conocimientos de desarrollo web, programación orientada a objetos, bases de datos e integración con archivos Excel sobre un caso práctico de soporte TI.
 
-El proyecto continuará evolucionando conforme incorpore nuevos conocimientos y mejoras.
+El proyecto continuará evolucionando conforme incorpore nuevas mejoras, refactorizaciones y aprendizajes.
+
+---
 
 ## Autor
 
 **José Gustavo Silva Medrano**  
 Estudiante de Ingeniería de Sistemas · Lima, Perú
 
-- GitHub: [@jsilvaPro](https://github.com/jsilvaPro)
-- LinkedIn: [José Gustavo Silva Medrano](https://www.linkedin.com/in/gustavo-silva-12b76a408)
-- Portafolio: [arcan.freedev.app](https://arcan.freedev.app/)
+- **GitHub:** [@jsilvaPro](https://github.com/jsilvaPro)
+- **LinkedIn:** [José Gustavo Silva Medrano](https://www.linkedin.com/in/jose-gustavo-silva-medrano/)
+- **Portafolio:** [arcan.freedev.app](https://arcan.freedev.app)
 
 ---
 
 <p align="center">
-  <sub>Proyecto desarrollado con fines académicos y de aprendizaje.</sub>
+  Proyecto desarrollado con fines académicos y de aprendizaje.
 </p>

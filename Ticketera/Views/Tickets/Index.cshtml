@@ -1,0 +1,526 @@
+﻿@model IEnumerable<Ticketera.Models.Ticket>
+
+@{
+    ViewBag.Title = "Tickets";
+    var rol = Session["Rol"] != null ? Session["Rol"].ToString() : "";
+}
+
+<style>
+    .tickets-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .tickets-header {
+        background: linear-gradient(135deg, #1db7c1 0%, #22c58b 100%);
+        color: white;
+        border-radius: 22px;
+        padding: 34px 36px;
+        margin-bottom: 25px;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.16);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+        .tickets-header h2 {
+            margin: 0;
+            font-weight: 900;
+            font-size: 34px;
+        }
+
+        .tickets-header p {
+            margin: 8px 0 0 0;
+            opacity: .95;
+            font-size: 15px;
+        }
+
+    .tickets-actions-header {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-rounded {
+        border-radius: 14px;
+        padding: 10px 18px;
+        font-weight: 800;
+    }
+
+    .tickets-header .btn-primary {
+        background: #ffffff;
+        color: #13adb8;
+        border: none;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+    }
+
+        .tickets-header .btn-primary:hover {
+            background: #f8ffff;
+            color: #0f9ea8;
+        }
+
+    .tickets-card {
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 24px;
+        border: 1px solid #dbeafe;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .table-tickets {
+        margin-bottom: 0;
+    }
+
+        .table-tickets thead th {
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 900;
+            white-space: nowrap;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 14px 12px;
+        }
+
+        .table-tickets tbody td {
+            vertical-align: middle;
+            padding: 15px 12px;
+            border-top: 1px solid #e5e7eb;
+            color: #0f172a;
+        }
+
+    .ticket-code {
+        font-weight: 900;
+        color: #0f172a;
+        white-space: nowrap;
+    }
+
+    .ticket-title {
+        font-weight: 900;
+        color: #0f172a;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+        max-width: 220px;
+    }
+
+    .ticket-description {
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.45;
+        max-width: 230px;
+    }
+
+    .empresa-name,
+    .contacto-name,
+    .tecnico-name {
+        font-weight: 700;
+        color: #1e293b;
+    }
+
+    .text-muted-small {
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .badge-custom {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .badge-abierto {
+        background: #ccfbf1;
+        color: #0f766e;
+    }
+
+    .badge-proceso {
+        background: #d1fae5;
+        color: #047857;
+    }
+
+    .badge-pendiente {
+        background: #cffafe;
+        color: #0e7490;
+    }
+
+    .badge-resuelto {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .badge-cerrado {
+        background: #e5e7eb;
+        color: #374151;
+    }
+
+    .badge-urgencia-baja {
+        background: #ecfeff;
+        color: #0e7490;
+    }
+
+    .badge-urgencia-media {
+        background: #d1fae5;
+        color: #047857;
+    }
+
+    .badge-urgencia-alta {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .badge-urgencia-muyalta {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .ticket-actions {
+        display: flex;
+        gap: 7px;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+    .btn-action {
+        border-radius: 12px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 900;
+        border: none;
+        text-decoration: none !important;
+        white-space: nowrap;
+        display: inline-block;
+    }
+
+    .btn-view {
+        background: #1db7c1;
+        color: white !important;
+    }
+
+        .btn-view:hover {
+            background: #149da7;
+            color: white !important;
+        }
+
+    .btn-edit {
+        background: #22c58b;
+        color: white !important;
+    }
+
+        .btn-edit:hover {
+            background: #16a974;
+            color: white !important;
+        }
+
+    .btn-delete {
+        background: #ef4444;
+        color: white !important;
+    }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            color: white !important;
+        }
+
+    .empty-box {
+        text-align: center;
+        padding: 55px 20px;
+        color: #64748b;
+    }
+
+        .empty-box h4 {
+            color: #0f172a;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+    .form-eliminar-ticket {
+        margin: 0;
+        display: inline-block;
+    }
+
+    .swal2-popup {
+        border-radius: 22px !important;
+        padding: 28px !important;
+    }
+
+    .swal2-title {
+        color: #0f172a !important;
+        font-weight: 900 !important;
+    }
+
+    .swal2-html-container {
+        color: #475569 !important;
+        font-weight: 600 !important;
+    }
+
+    .swal2-confirm {
+        background: #ef4444 !important;
+        border-radius: 12px !important;
+        font-weight: 900 !important;
+        padding: 10px 20px !important;
+    }
+
+    .swal2-cancel {
+        background: #e2e8f0 !important;
+        color: #334155 !important;
+        border-radius: 12px !important;
+        font-weight: 900 !important;
+        padding: 10px 20px !important;
+    }
+
+    @@media (max-width: 768px) {
+        .tickets-header {
+            text-align: center;
+            justify-content: center;
+        }
+
+            .tickets-header h2 {
+                font-size: 28px;
+            }
+
+        .tickets-actions-header {
+            justify-content: center;
+        }
+
+        .ticket-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+</style>
+
+<div class="tickets-page">
+
+    <div class="tickets-header">
+        <div>
+            <h2>Tickets</h2>
+            <p>Listado general de tickets registrados por las empresas y sus contactos.</p>
+        </div>
+
+        <div class="tickets-actions-header">
+            <a href="@Url.Action("Create", "Tickets")" class="btn btn-primary btn-rounded">
+                Nuevo ticket
+            </a>
+        </div>
+    </div>
+
+    <div class="tickets-card">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-tickets">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Ticket</th>
+                            <th>Empresa</th>
+                            <th>Contacto</th>
+                            <th>Asignado a</th>
+                            <th>Tipo</th>
+                            <th>Categoría</th>
+                            <th>Estado</th>
+                            <th>Urgencia</th>
+                            <th>Apertura</th>
+                            <th>Actualización</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var estadoClase = "badge-cerrado";
+
+                            if (item.Estado == "Abierto")
+                            {
+                                estadoClase = "badge-abierto";
+                            }
+                            else if (item.Estado == "En proceso")
+                            {
+                                estadoClase = "badge-proceso";
+                            }
+                            else if (item.Estado == "Pendiente")
+                            {
+                                estadoClase = "badge-pendiente";
+                            }
+                            else if (item.Estado == "Resuelto")
+                            {
+                                estadoClase = "badge-resuelto";
+                            }
+
+                            var urgenciaClase = "badge-urgencia-baja";
+
+                            if (item.Urgencia == "Muy alta")
+                            {
+                                urgenciaClase = "badge-urgencia-muyalta";
+                            }
+                            else if (item.Urgencia == "Alta")
+                            {
+                                urgenciaClase = "badge-urgencia-alta";
+                            }
+                            else if (item.Urgencia == "Media")
+                            {
+                                urgenciaClase = "badge-urgencia-media";
+                            }
+
+                            var descripcion = item.Descripcion ?? "";
+
+                            if (descripcion.Length > 95)
+                            {
+                                descripcion = descripcion.Substring(0, 95) + "...";
+                            }
+
+                            var fechaApertura = string.Format("{0:dd/MM/yyyy}", item.FechaApertura);
+                            var horaApertura = string.Format("{0:HH:mm}", item.FechaApertura);
+
+                            var fechaActualizacion = string.Format("{0:dd/MM/yyyy}", item.FechaActualizacion);
+                            var horaActualizacion = string.Format("{0:HH:mm}", item.FechaActualizacion);
+
+                            <tr>
+                                <td>
+                                    <span class="ticket-code">#@item.Id</span>
+                                </td>
+
+                                <td>
+                                    <div class="ticket-title">@item.Titulo</div>
+                                    <div class="ticket-description">@descripcion</div>
+                                </td>
+
+                                <td>
+                                    <div class="empresa-name">
+                                        @(item.Entidad != null ? item.Entidad.Nombre : "Sin empresa")
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="contacto-name">
+                                        @(item.Contacto != null ? item.Contacto.Nombre : "Sin contacto")
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="tecnico-name">
+                                        @(item.AsignadoA != null ? item.AsignadoA.Nombre : "Sin asignar")
+                                    </div>
+                                </td>
+
+                                <td>@item.Tipo</td>
+
+                                <td>@item.Categoria</td>
+
+                                <td>
+                                    <span class="badge-custom @estadoClase">
+                                        @item.Estado
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="badge-custom @urgenciaClase">
+                                        @item.Urgencia
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(fechaApertura))
+                                    {
+                                        @fechaApertura
+                                        <div class="text-muted-small">
+                                            @horaApertura
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted-small">Sin fecha</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(fechaActualizacion))
+                                    {
+                                        @fechaActualizacion
+                                        <div class="text-muted-small">
+                                            @horaActualizacion
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted-small">Sin actualización</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <div class="ticket-actions">
+                                        <a href="@Url.Action("Details", "Tickets", new { id = item.Id })"
+                                           class="btn-action btn-view">
+                                            Ver
+                                        </a>
+
+                                        @if ((rol == "Admin" || rol == "Tecnico") && item.Estado != "Cerrado")
+                                        {
+                                            <form action="@Url.Action("Delete", "Tickets", new { id = item.Id })"
+                                                  method="post"
+                                                  class="form-eliminar-ticket">
+
+                                                @Html.AntiForgeryToken()
+
+                                                <button type="submit" class="btn-action btn-delete">
+                                                    Eliminar
+                                                </button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-box">
+                <h4>No hay tickets registrados</h4>
+                <p>Cuando se registren tickets, aparecerán en esta sección.</p>
+
+                <a href="@Url.Action("Create", "Tickets")" class="btn btn-primary btn-rounded">
+                    Registrar primer ticket
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".form-eliminar-ticket").on("submit", function (e) {
+                e.preventDefault();
+
+                var form = this;
+
+                Swal.fire({
+                    title: "¿Eliminar ticket?",
+                    text: "Esta acción no se puede deshacer. También se eliminarán sus archivos adjuntos.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar",
+                    reverseButtons: true,
+                    focusCancel: true,
+                    background: "#ffffff",
+                    color: "#0f172a"
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+}

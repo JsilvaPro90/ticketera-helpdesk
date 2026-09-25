@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Carga masiva desde Excel";
+}
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Carga masiva de empresas y contactos</h4>
+        </div>
+
+        <div class="card-body">
+
+            @if (TempData["Mensaje"] != null)
+            {
+                <div class="alert alert-success">
+                    @Html.Raw(TempData["Mensaje"])
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-warning">
+                    @Html.Raw(TempData["Error"])
+                </div>
+            }
+
+            <p>
+                Esta opción permite importar empresas y contactos desde un archivo Excel.
+            </p>
+
+            <div class="alert alert-info">
+                <b>El archivo Excel debe tener 2 hojas:</b>
+                <br />
+                <br />
+
+                <b>Hoja EMPRESAS:</b>
+                <br />
+                Nombre de la empresa, RUC, Dirección, Correo, Teléfono, Empresa activa
+                <br />
+                <br />
+
+                <b>Hoja CONTACTO:</b>
+                <br />
+                Empresa, Nombre completo, Cargo, Correo, Teléfono, Contacto principal, Contacto activo
+            </div>
+
+            <div class="alert alert-warning">
+                <b>Importante:</b> esta opción solo está disponible para usuarios Admin.
+                <br />
+                El archivo debe estar en formato <b>.xlsx</b>.
+            </div>
+
+            @using (Html.BeginForm("CargarExcel", "Importacion", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group mb-3">
+                    <label><b>Seleccionar archivo Excel</b></label>
+                    <input type="file" name="archivo" class="form-control" accept=".xlsx" required />
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    📥 Importar Excel
+                </button>
+
+                <a href="@Url.Action("Index", "Home")" class="btn btn-secondary">
+                    Volver
+                </a>
+            }
+        </div>
+    </div>
+</div>

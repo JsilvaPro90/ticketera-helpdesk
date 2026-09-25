@@ -1,0 +1,555 @@
+﻿@model Ticketera.Models.Ticket
+
+@{
+    ViewBag.Title = "Nuevo Ticket";
+
+    bool esCliente = false;
+
+    if (ViewBag.EsCliente != null)
+    {
+        esCliente = (bool)ViewBag.EsCliente;
+    }
+
+    string empresaCliente = ViewBag.EmpresaCliente != null ? ViewBag.EmpresaCliente.ToString() : "";
+    string contactoCliente = ViewBag.ContactoCliente != null ? ViewBag.ContactoCliente.ToString() : "";
+}
+
+<style>
+    .ticket-page {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 0 15px;
+    }
+
+    .ticket-header {
+        background: linear-gradient(135deg, #1f2937, #334155);
+        color: white;
+        border-radius: 18px;
+        padding: 28px;
+        margin-bottom: 25px;
+        box-shadow: 0 12px 30px rgba(0,0,0,.12);
+    }
+
+        .ticket-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .ticket-header p {
+            margin-top: 8px;
+            opacity: .9;
+        }
+
+    .ticket-card {
+        background: #fff;
+        border-radius: 18px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        border: 1px solid #e5e7eb;
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 18px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .form-label-custom {
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .required-star::after {
+        content: " *";
+        color: #dc2626;
+    }
+
+    .ticket-page .form-control {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 12px;
+        min-height: 42px;
+        box-shadow: none;
+        border: 1px solid #cbd5e1;
+    }
+
+        .ticket-page .form-control[readonly] {
+            background: #f8fafc;
+            cursor: not-allowed;
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+    .ticket-page textarea.form-control {
+        width: 100%;
+        max-width: 100%;
+        min-height: 130px;
+        resize: vertical;
+    }
+
+    textarea.form-control {
+        min-height: 130px;
+        resize: vertical;
+    }
+
+    .ticket-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn-rounded {
+        border-radius: 12px;
+        padding: 10px 20px;
+    }
+
+    .helper-text {
+        color: #64748b;
+        font-size: 12px;
+        margin-top: 4px;
+    }
+
+    .alert-validation {
+        border-radius: 12px;
+    }
+
+    .quick-actions {
+        margin-top: 8px;
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+        .quick-actions a {
+            font-size: 12px;
+            text-decoration: none;
+        }
+
+    .client-info-box {
+        background: #ecfeff;
+        border: 1px solid #a5f3fc;
+        color: #155e75;
+        border-radius: 12px;
+        padding: 12px 14px;
+        margin-bottom: 18px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+</style>
+
+<div class="ticket-page">
+    <div class="ticket-header">
+        <h2>Registrar nuevo ticket</h2>
+
+        @if (esCliente)
+        {
+            <p>Tu empresa y contacto se asignarán automáticamente según tu usuario.</p>
+        }
+        else
+        {
+            <p>Selecciona la empresa, el contacto solicitante y el responsable interno del caso.</p>
+        }
+    </div>
+
+    @using (Html.BeginForm("Create", "Tickets", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(true, "", new { @class = "alert alert-danger alert-validation" })
+
+        <div class="ticket-card">
+            <div class="section-title">Empresa y contacto</div>
+
+            @if (esCliente)
+            {
+                <div class="client-info-box">
+                    La empresa y el contacto solicitante fueron reconocidos automáticamente.
+                    No puedes registrar tickets a nombre de otra empresa.
+                </div>
+
+                @Html.HiddenFor(m => m.EntidadId)
+                @Html.HiddenFor(m => m.ContactoId)
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label-custom required-star">Empresa / Entidad</label>
+                            <input type="text"
+                                   class="form-control"
+                                   value="@empresaCliente"
+                                   readonly />
+
+                            @Html.ValidationMessageFor(m => m.EntidadId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label-custom required-star">Contacto solicitante</label>
+                            <input type="text"
+                                   class="form-control"
+                                   value="@contactoCliente"
+                                   readonly />
+
+                            @Html.ValidationMessageFor(m => m.ContactoId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label-custom required-star">Empresa / Entidad</label>
+
+                            @Html.DropDownListFor(
+                                m => m.EntidadId,
+                                (SelectList)ViewBag.EntidadId,
+                                "-- Selecciona empresa --",
+                                new { @class = "form-control", id = "EntidadId" }
+                            )
+
+                            @Html.ValidationMessageFor(m => m.EntidadId, "", new { @class = "text-danger" })
+
+                            <div class="quick-actions">
+                                <a href="@Url.Action("Create", "Entidades")" target="_blank">Registrar empresa</a>
+                                <a href="@Url.Action("Index", "Entidades")" target="_blank">Ver empresas</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label-custom required-star">Contacto solicitante</label>
+
+                            @Html.DropDownListFor(
+                                m => m.ContactoId,
+                                (SelectList)ViewBag.ContactoId,
+                                "-- Selecciona contacto --",
+                                new { @class = "form-control", id = "ContactoId" }
+                            )
+
+                            @Html.ValidationMessageFor(m => m.ContactoId, "", new { @class = "text-danger" })
+
+                            <div class="quick-actions">
+                                <a href="@Url.Action("Create", "Contactos")" target="_blank">Registrar contacto</a>
+                                <span class="helper-text">Se mostrarán solo contactos de la empresa seleccionada.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="ticket-card">
+            <div class="section-title">Información principal</div>
+
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Título</label>
+
+                        @Html.TextBoxFor(
+                            m => m.Titulo,
+                            new { @class = "form-control", placeholder = "Ej: Error al ingresar al sistema" }
+                        )
+
+                        @Html.ValidationMessageFor(m => m.Titulo, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Descripción</label>
+
+                        @Html.TextAreaFor(
+                            m => m.Descripcion,
+                            new { @class = "form-control", placeholder = "Describe el problema o requerimiento con el mayor detalle posible..." }
+                        )
+
+                        @Html.ValidationMessageFor(m => m.Descripcion, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label-custom">Adjuntos</label>
+
+                        <input type="file"
+                               name="archivos"
+                               id="archivos"
+                               multiple
+                               class="form-control"
+                               accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.txt" />
+
+                        <div class="helper-text">
+                            Puedes adjuntar imágenes, PDF, Word, Excel o TXT. Máximo 10 MB por archivo.
+                        </div>
+
+                        <div id="listaArchivos" class="helper-text" style="margin-top:10px;"></div>
+                    </div>
+                </div>
+
+                <div class="col-md-4 col-md-offset-1">
+                    @if (!esCliente)
+                    {
+                        <div class="form-group">
+                            <label class="form-label-custom">Asignado a</label>
+
+                            @Html.DropDownListFor(
+                                m => m.AsignadoAId,
+                                (SelectList)ViewBag.AsignadoAId,
+                                "-- Selecciona responsable --",
+                                new { @class = "form-control" }
+                            )
+
+                            @Html.ValidationMessageFor(m => m.AsignadoAId, "", new { @class = "text-danger" })
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(m => m.AsignadoAId)
+
+                        <div class="client-info-box">
+                            El responsable interno será asignado por el equipo de soporte.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="ticket-card">
+            <div class="section-title">Clasificación del ticket</div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Tipo</label>
+
+                        @Html.DropDownListFor(
+                            m => m.Tipo,
+                            (SelectList)ViewBag.Tipos,
+                            "-- Selecciona tipo --",
+                            new { @class = "form-control" }
+                        )
+
+                        @Html.ValidationMessageFor(m => m.Tipo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Categoría</label>
+
+                        @Html.DropDownListFor(
+                            m => m.Categoria,
+                            (SelectList)ViewBag.Categorias,
+                            "-- Selecciona categoría --",
+                            new { @class = "form-control" }
+                        )
+
+                        @Html.ValidationMessageFor(m => m.Categoria, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    @if (!esCliente)
+                    {
+                        <div class="form-group">
+                            <label class="form-label-custom required-star">Estado</label>
+
+                            @Html.DropDownListFor(
+                                m => m.Estado,
+                                (SelectList)ViewBag.Estados,
+                                "-- Selecciona estado --",
+                                new { @class = "form-control" }
+                            )
+
+                            @Html.ValidationMessageFor(m => m.Estado, "", new { @class = "text-danger" })
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(m => m.Estado)
+
+                        <div class="form-group">
+                            <label class="form-label-custom required-star">Estado</label>
+                            <input type="text" class="form-control" value="Abierto" readonly />
+                            <div class="helper-text">El ticket será registrado inicialmente como abierto.</div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Urgencia</label>
+
+                        @Html.DropDownListFor(
+                            m => m.Urgencia,
+                            (SelectList)ViewBag.Urgencias,
+                            "-- Selecciona urgencia --",
+                            new { @class = "form-control" }
+                        )
+
+                        @Html.ValidationMessageFor(m => m.Urgencia, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Preferencia de contacto</label>
+
+                        @Html.DropDownListFor(
+                            m => m.PreferenciaContacto,
+                            (SelectList)ViewBag.Preferencias,
+                            "-- Selecciona preferencia --",
+                            new { @class = "form-control" }
+                        )
+
+                        @Html.ValidationMessageFor(m => m.PreferenciaContacto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="ticket-card">
+            <div class="section-title">Fechas</div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Fecha de apertura</label>
+
+                        @Html.TextBoxFor(
+                            m => m.FechaApertura,
+                            "{0:yyyy-MM-ddTHH:mm}",
+                            new { @class = "form-control", type = "datetime-local" }
+                        )
+
+                        @Html.ValidationMessageFor(m => m.FechaApertura, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                @if (!esCliente)
+                {
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label-custom">Fecha de resolución</label>
+
+                            @Html.TextBoxFor(
+                                m => m.FechaResolucion,
+                                "{0:yyyy-MM-ddTHH:mm}",
+                                new { @class = "form-control", type = "datetime-local" }
+                            )
+
+                            @Html.ValidationMessageFor(m => m.FechaResolucion, "", new { @class = "text-danger" })
+                            <div class="helper-text">Opcional</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="form-label-custom">Fecha de cierre</label>
+
+                            @Html.TextBoxFor(
+                                m => m.FechaCierre,
+                                "{0:yyyy-MM-ddTHH:mm}",
+                                new { @class = "form-control", type = "datetime-local" }
+                            )
+
+                            @Html.ValidationMessageFor(m => m.FechaCierre, "", new { @class = "text-danger" })
+                            <div class="helper-text">Opcional</div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(m => m.FechaResolucion)
+                    @Html.HiddenFor(m => m.FechaCierre)
+
+                    <div class="col-md-8">
+                        <div class="client-info-box" style="margin-top:28px;">
+                            Las fechas de resolución y cierre serán completadas por el equipo de soporte.
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="ticket-footer">
+            <a href="@Url.Action("Index", "Tickets")" class="btn btn-default btn-rounded">Cancelar</a>
+            <button type="submit" class="btn btn-primary btn-rounded">Guardar ticket</button>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+<script>
+        $(document).ready(function () {
+
+            var esCliente = @Html.Raw(esCliente ? "true" : "false");
+
+            if (!esCliente) {
+                $("#EntidadId").change(function () {
+                    var entidadId = $(this).val();
+                    var contactoSelect = $("#ContactoId");
+
+                    contactoSelect.empty();
+
+                    if (!entidadId) {
+                        contactoSelect.append($("<option></option>").val("").text("-- Selecciona contacto --"));
+                        return;
+                    }
+
+                    contactoSelect.append($("<option></option>").val("").text("-- Cargando contactos --"));
+
+                    $.ajax({
+                        url: '@Url.Action("ObtenerContactosPorEntidad", "Tickets")',
+                        type: 'GET',
+                        data: { entidadId: entidadId },
+                        success: function (contactos) {
+                            contactoSelect.empty();
+                            contactoSelect.append($("<option></option>").val("").text("-- Selecciona contacto --"));
+
+                            $.each(contactos, function (index, contacto) {
+                                contactoSelect.append(
+                                    $("<option></option>").val(contacto.Id).text(contacto.Nombre)
+                                );
+                            });
+                        },
+                        error: function () {
+                            contactoSelect.empty();
+                            contactoSelect.append($("<option></option>").val("").text("-- Error al cargar contactos --"));
+                        }
+                    });
+                });
+            }
+
+            $("#archivos").on("change", function () {
+                var archivos = this.files;
+                var contenedor = $("#listaArchivos");
+
+                contenedor.empty();
+
+                if (!archivos || archivos.length === 0) {
+                    return;
+                }
+
+                contenedor.append("<strong>Archivos seleccionados:</strong><br>");
+
+                for (var i = 0; i < archivos.length; i++) {
+                    contenedor.append("• " + archivos[i].name + "<br>");
+                }
+            });
+
+        });
+</script>
+}

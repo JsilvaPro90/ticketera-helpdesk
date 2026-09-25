@@ -1,0 +1,417 @@
+﻿@model Ticketera.Models.ViewModels.UsuarioCreateViewModel
+
+@{
+    ViewBag.Title = "Crear usuario";
+    var rolSesion = Session["Rol"] != null ? Session["Rol"].ToString() : "";
+}
+
+<style>
+    .usuario-create-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .usuario-create-header {
+        background: linear-gradient(135deg, #1db7c1 0%, #22c58b 100%);
+        color: white;
+        border-radius: 22px;
+        padding: 34px 36px;
+        margin-bottom: 25px;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.16);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+        .usuario-create-header h2 {
+            margin: 0;
+            font-weight: 900;
+            font-size: 34px;
+        }
+
+        .usuario-create-header p {
+            margin: 8px 0 0 0;
+            opacity: .95;
+            font-size: 15px;
+        }
+
+    .create-card {
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 28px;
+        border: 1px solid #dbeafe;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 900;
+        color: #0f172a;
+        margin-bottom: 22px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .form-label-custom {
+        font-weight: 900;
+        color: #334155;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .required-star::after {
+        content: " *";
+        color: #dc2626;
+    }
+
+    .usuario-create-page .form-control {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 14px;
+        min-height: 44px;
+        border: 1px solid #cbd5e1;
+        box-shadow: none;
+        padding: 10px 14px;
+    }
+
+        .usuario-create-page .form-control:focus {
+            border-color: #1db7c1;
+            box-shadow: 0 0 0 3px rgba(29, 183, 193, .16);
+        }
+
+    .info-box {
+        background: #f8fafc;
+        border: 1px solid #dbeafe;
+        border-radius: 16px;
+        padding: 15px 18px;
+        color: #475569;
+        font-weight: 700;
+        margin-bottom: 22px;
+    }
+
+        .info-box strong {
+            color: #0e7490;
+        }
+
+    .client-section {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+        padding: 20px;
+        margin-top: 10px;
+        margin-bottom: 20px;
+        display: none;
+    }
+
+        .client-section.active {
+            display: block;
+        }
+
+    .checks-box {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 16px;
+        margin-top: 8px;
+    }
+
+    .check-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        color: #334155;
+        margin-bottom: 0;
+    }
+
+    .helper-text {
+        color: #64748b;
+        font-size: 12px;
+        margin-top: 8px;
+        font-weight: 600;
+    }
+
+    .footer-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+
+    .btn-action {
+        border-radius: 14px;
+        padding: 11px 18px;
+        font-size: 14px;
+        font-weight: 900;
+        border: none;
+        text-decoration: none !important;
+        display: inline-block;
+    }
+
+    .btn-back {
+        background: #e2e8f0;
+        color: #334155 !important;
+    }
+
+        .btn-back:hover {
+            background: #cbd5e1;
+            color: #0f172a !important;
+        }
+
+    .btn-save {
+        background: #22c58b;
+        color: white !important;
+        box-shadow: 0 10px 22px rgba(34, 197, 139, .22);
+    }
+
+        .btn-save:hover {
+            background: #16a974;
+            color: white !important;
+        }
+
+    .alert-validation {
+        border-radius: 14px;
+        padding: 14px 18px;
+        font-weight: 700;
+    }
+
+    @@media (max-width: 768px) {
+        .usuario-create-header {
+            text-align: center;
+            justify-content: center;
+        }
+
+            .usuario-create-header h2 {
+                font-size: 28px;
+            }
+
+        .footer-actions {
+            justify-content: center;
+        }
+
+        .btn-action {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="usuario-create-page">
+
+    <div class="usuario-create-header">
+        <div>
+            <h2>Crear usuario</h2>
+
+            @if (rolSesion == "Tecnico")
+            {
+                <p>Registra usuarios clientes asociados a una empresa.</p>
+            }
+            else
+            {
+                <p>Registra usuarios administradores, técnicos o clientes.</p>
+            }
+        </div>
+    </div>
+
+    <div class="create-card">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger alert-validation" })
+
+            <div class="section-title">Datos de acceso</div>
+
+            <div class="info-box">
+                El usuario creado podrá iniciar sesión con su nombre de usuario y contraseña.
+                Si el rol es <strong>Cliente</strong>, también se creará como contacto de una empresa.
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Rol</label>
+
+                        @Html.DropDownListFor(
+                            model => model.Rol,
+                            (SelectList)ViewBag.Roles,
+                            "-- Selecciona rol --",
+                            new { @class = "form-control", id = "Rol" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.Rol, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Usuario</label>
+
+                        @Html.TextBoxFor(
+                            model => model.NombreUsuario,
+                            new { @class = "form-control", placeholder = "Ej: jramirez" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.NombreUsuario, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Nombre completo</label>
+
+                        @Html.TextBoxFor(
+                            model => model.NombreCompleto,
+                            new { @class = "form-control", placeholder = "Ej: Juan Ramirez" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.NombreCompleto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Correo</label>
+
+                        @Html.TextBoxFor(
+                            model => model.Email,
+                            new { @class = "form-control", type = "email", placeholder = "Ej: usuario@empresa.com" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div id="datosCliente" class="client-section">
+                <div class="section-title">Datos del cliente</div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="form-label-custom required-star">Empresa</label>
+
+                            @Html.DropDownListFor(
+                                model => model.EntidadId,
+                                (SelectList)ViewBag.EntidadId,
+                                "-- Selecciona empresa --",
+                                new { @class = "form-control" }
+                            )
+
+                            @Html.ValidationMessageFor(model => model.EntidadId, "", new { @class = "text-danger" })
+
+                            <div class="helper-text">
+                                El usuario cliente quedará asociado como contacto de esta empresa.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="form-group">
+                            <label class="form-label-custom">Cargo</label>
+
+                            @Html.TextBoxFor(
+                                model => model.Cargo,
+                                new { @class = "form-control", placeholder = "Ej: Jefe de TI" }
+                            )
+
+                            @Html.ValidationMessageFor(model => model.Cargo, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="col-md-5">
+                        <div class="form-group">
+                            <label class="form-label-custom">Teléfono</label>
+
+                            @Html.TextBoxFor(
+                                model => model.Telefono,
+                                new { @class = "form-control", placeholder = "Ej: 999888777" }
+                            )
+
+                            @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title">Seguridad</div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Contraseña</label>
+
+                        @Html.PasswordFor(
+                            model => model.Password,
+                            new { @class = "form-control", placeholder = "Ingresa una contraseña" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Confirmar contraseña</label>
+
+                        @Html.PasswordFor(
+                            model => model.ConfirmarPassword,
+                            new { @class = "form-control", placeholder = "Repite la contraseña" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.ConfirmarPassword, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="checks-box">
+                <label class="check-row">
+                    @Html.CheckBoxFor(model => model.Activo)
+                    Usuario activo
+                </label>
+            </div>
+
+            <div class="footer-actions">
+                <a href="@Url.Action("Index", "Usuarios")" class="btn-action btn-back">
+                    Cancelar
+                </a>
+
+                <button type="submit" class="btn-action btn-save">
+                    Guardar usuario
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        $(document).ready(function () {
+            function actualizarCamposCliente() {
+                var rol = $("#Rol").val();
+
+                if (rol === "Cliente") {
+                    $("#datosCliente").addClass("active");
+                } else {
+                    $("#datosCliente").removeClass("active");
+                }
+            }
+
+            actualizarCamposCliente();
+
+            $("#Rol").change(function () {
+                actualizarCamposCliente();
+            });
+        });
+    </script>
+}

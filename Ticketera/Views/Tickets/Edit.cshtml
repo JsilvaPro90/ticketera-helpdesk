@@ -1,0 +1,431 @@
+﻿@using System.Collections.Generic
+@model Ticketera.Models.Ticket
+
+@{
+    ViewBag.Title = "Editar ticket";
+}
+
+<style>
+    .ticket-edit-page {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .ticket-edit-header {
+        background: linear-gradient(135deg, #1db7c1 0%, #22c58b 100%);
+        color: white;
+        border-radius: 22px;
+        padding: 34px 36px;
+        margin-bottom: 25px;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.16);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+        .ticket-edit-header h2 {
+            margin: 0;
+            font-weight: 900;
+            font-size: 34px;
+        }
+
+        .ticket-edit-header p {
+            margin: 8px 0 0 0;
+            opacity: .95;
+            font-size: 15px;
+        }
+
+    .edit-card {
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 28px;
+        border: 1px solid #dbeafe;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+        margin-bottom: 22px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 900;
+        color: #0f172a;
+        margin-bottom: 22px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .info-box {
+        background: #f8fafc;
+        border: 1px solid #dbeafe;
+        border-radius: 16px;
+        padding: 15px 18px;
+        color: #475569;
+        font-weight: 700;
+        margin-bottom: 22px;
+    }
+
+    .readonly-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .readonly-item {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 16px;
+    }
+
+    .readonly-label {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 7px;
+    }
+
+    .readonly-value {
+        color: #0f172a;
+        font-size: 15px;
+        font-weight: 800;
+        word-break: break-word;
+    }
+
+    .description-box {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 16px;
+        color: #0f172a;
+        line-height: 1.7;
+        white-space: pre-line;
+        margin-top: 18px;
+    }
+
+    .form-label-custom {
+        font-weight: 900;
+        color: #334155;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .required-star::after {
+        content: " *";
+        color: #dc2626;
+    }
+
+    .ticket-edit-page .form-control {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 14px;
+        min-height: 44px;
+        border: 1px solid #cbd5e1;
+        box-shadow: none;
+        padding: 10px 14px;
+    }
+
+        .ticket-edit-page .form-control:focus {
+            border-color: #1db7c1;
+            box-shadow: 0 0 0 3px rgba(29, 183, 193, .16);
+        }
+
+    .footer-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+
+    .btn-action {
+        border-radius: 14px;
+        padding: 11px 18px;
+        font-size: 14px;
+        font-weight: 900;
+        border: none;
+        text-decoration: none !important;
+        display: inline-block;
+    }
+
+    .btn-back {
+        background: #e2e8f0;
+        color: #334155 !important;
+    }
+
+        .btn-back:hover {
+            background: #cbd5e1;
+            color: #0f172a !important;
+        }
+
+    .btn-save {
+        background: #22c58b;
+        color: white !important;
+        box-shadow: 0 10px 22px rgba(34, 197, 139, .22);
+    }
+
+        .btn-save:hover {
+            background: #16a974;
+            color: white !important;
+        }
+
+    .alert-validation {
+        border-radius: 14px;
+        padding: 14px 18px;
+        font-weight: 700;
+    }
+
+    .text-muted-custom {
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    @@media (max-width: 768px) {
+        .ticket-edit-header {
+            text-align: center;
+            justify-content: center;
+        }
+
+            .ticket-edit-header h2 {
+                font-size: 28px;
+            }
+
+        .readonly-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .footer-actions {
+            justify-content: center;
+        }
+
+        .btn-action {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="ticket-edit-page">
+
+    <div class="ticket-edit-header">
+        <div>
+            <h2>Editar ticket #@Model.Id</h2>
+            <p>Solo puedes actualizar clasificación, estado, urgencia y técnico asignado.</p>
+        </div>
+    </div>
+
+    <div class="edit-card">
+        <div class="section-title">Información bloqueada</div>
+
+        <div class="info-box">
+            La empresa, contacto solicitante, título y descripción no se editan desde esta pantalla.
+        </div>
+
+        <div class="readonly-grid">
+            <div class="readonly-item">
+                <div class="readonly-label">Empresa / Entidad</div>
+                <div class="readonly-value">
+                    @(Model.Entidad != null ? Model.Entidad.Nombre : "No registrada")
+                </div>
+            </div>
+
+            <div class="readonly-item">
+                <div class="readonly-label">Contacto solicitante</div>
+                <div class="readonly-value">
+                    @(Model.Contacto != null ? Model.Contacto.Nombre : "No registrado")
+                </div>
+            </div>
+
+            <div class="readonly-item">
+                <div class="readonly-label">Título</div>
+                <div class="readonly-value">
+                    @Model.Titulo
+                </div>
+            </div>
+
+            <div class="readonly-item">
+                <div class="readonly-label">Preferencia de contacto</div>
+                <div class="readonly-value">
+                    @Model.PreferenciaContacto
+                </div>
+            </div>
+        </div>
+
+        <div class="description-box">
+            @if (!string.IsNullOrWhiteSpace(Model.Descripcion))
+            {
+                @Model.Descripcion
+            }
+            else
+            {
+                <span class="text-muted-custom">Sin descripción registrada.</span>
+            }
+        </div>
+    </div>
+
+    <div class="edit-card">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.Id)
+
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger alert-validation" })
+
+            <div class="section-title">Campos editables</div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Tipo</label>
+
+                        @Html.DropDownListFor(
+                            model => model.Tipo,
+                            (SelectList)ViewBag.Tipos,
+                            "-- Selecciona tipo --",
+                            new { @class = "form-control" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.Tipo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Categoría</label>
+
+                        @Html.DropDownListFor(
+                            model => model.Categoria,
+                            (SelectList)ViewBag.Categorias,
+                            "-- Selecciona categoría --",
+                            new { @class = "form-control" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.Categoria, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Estado</label>
+
+                        @Html.DropDownListFor(
+                            model => model.Estado,
+                            (SelectList)ViewBag.Estados,
+                            "-- Selecciona estado --",
+                            new { @class = "form-control" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
+
+                        <div class="text-muted-custom" style="font-size:12px;margin-top:6px;">
+                            Si pasa a Resuelto, se genera Fecha de resolución. Si pasa a Cerrado, se genera Fecha de cierre.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Urgencia</label>
+
+                        @Html.DropDownListFor(
+                            model => model.Urgencia,
+                            (SelectList)ViewBag.Urgencias,
+                            "-- Selecciona urgencia --",
+                            new { @class = "form-control" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.Urgencia, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="form-label-custom">Técnico asignado</label>
+
+                        @Html.DropDownListFor(
+                            model => model.AsignadoAId,
+                            (IEnumerable<SelectListItem>)ViewBag.TecnicosAsignables,
+                            "-- Sin asignar --",
+                            new { @class = "form-control" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.AsignadoAId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="section-title">Fechas automáticas</div>
+
+            <div class="readonly-grid">
+                <div class="readonly-item">
+                    <div class="readonly-label">Fecha de apertura</div>
+                    <div class="readonly-value">
+                        @string.Format("{0:dd/MM/yyyy HH:mm}", Model.FechaApertura)
+                    </div>
+                </div>
+
+                <div class="readonly-item">
+                    <div class="readonly-label">Fecha de resolución</div>
+                    <div class="readonly-value">
+                        @if (Model.FechaResolucion.HasValue)
+                        {
+                            @Model.FechaResolucion.Value.ToString("dd/MM/yyyy HH:mm")
+                        }
+                        else
+                        {
+                            <span class="text-muted-custom">Se generará al marcar como Resuelto.</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="readonly-item">
+                    <div class="readonly-label">Fecha de cierre</div>
+                    <div class="readonly-value">
+                        @if (Model.FechaCierre.HasValue)
+                        {
+                            @Model.FechaCierre.Value.ToString("dd/MM/yyyy HH:mm")
+                        }
+                        else
+                        {
+                            <span class="text-muted-custom">Se generará al marcar como Cerrado.</span>
+                        }
+                    </div>
+                </div>
+
+                <div class="readonly-item">
+                    <div class="readonly-label">Última actualización</div>
+                    <div class="readonly-value">
+                        @if (Model.FechaActualizacion.HasValue)
+                        {
+                            @Model.FechaActualizacion.Value.ToString("dd/MM/yyyy HH:mm")
+                        }
+                        else
+                        {
+                            <span class="text-muted-custom">Sin actualización registrada.</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-actions">
+                <a href="@Url.Action("Details", "Tickets", new { id = Model.Id })" class="btn-action btn-back">
+                    Cancelar
+                </a>
+
+                <button type="submit" class="btn-action btn-save">
+                    Guardar cambios
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,459 @@
+﻿@model Ticketera.Models.Contacto
+
+@{
+    ViewBag.Title = "Detalle del contacto";
+}
+
+<style>
+    .contacto-detail-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .contacto-detail-header {
+        background: linear-gradient(135deg, #1db7c1 0%, #22c58b 100%);
+        color: white;
+        border-radius: 22px;
+        padding: 34px 36px;
+        margin-bottom: 25px;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.16);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+        .contacto-detail-header h2 {
+            margin: 0;
+            font-weight: 900;
+            font-size: 34px;
+        }
+
+        .contacto-detail-header p {
+            margin: 8px 0 0 0;
+            opacity: .95;
+            font-size: 15px;
+        }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-rounded {
+        border-radius: 14px;
+        padding: 10px 18px;
+        font-weight: 800;
+    }
+
+    .contacto-detail-header .btn-primary {
+        background: #ffffff;
+        color: #13adb8;
+        border: none;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+    }
+
+        .contacto-detail-header .btn-primary:hover {
+            background: #f8ffff;
+            color: #0f9ea8;
+        }
+
+    .contacto-detail-header .btn-default {
+        background: rgba(255,255,255,.18);
+        color: white;
+        border: 1px solid rgba(255,255,255,.35);
+    }
+
+        .contacto-detail-header .btn-default:hover {
+            background: rgba(255,255,255,.25);
+            color: white;
+        }
+
+    .detail-card {
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 28px;
+        border: 1px solid #dbeafe;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 900;
+        color: #0f172a;
+        margin-bottom: 22px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .profile-box {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 25px;
+        padding: 18px;
+        border-radius: 18px;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+    }
+
+    .profile-avatar {
+        width: 70px;
+        height: 70px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, #1db7c1, #22c58b);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: 900;
+        box-shadow: 0 10px 22px rgba(34, 197, 139, .22);
+        flex-shrink: 0;
+    }
+
+    .profile-name {
+        font-size: 24px;
+        font-weight: 900;
+        color: #0f172a;
+        margin-bottom: 5px;
+    }
+
+    .profile-subtitle {
+        color: #64748b;
+        font-weight: 700;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .detail-item {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 16px;
+    }
+
+    .detail-label {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 7px;
+    }
+
+    .detail-value {
+        color: #0f172a;
+        font-size: 15px;
+        font-weight: 800;
+        word-break: break-word;
+    }
+
+        .detail-value a {
+            color: #0e7490;
+            text-decoration: none;
+        }
+
+            .detail-value a:hover {
+                text-decoration: underline;
+            }
+
+    .badge-custom {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .badge-principal {
+        background: #ccfbf1;
+        color: #0f766e;
+    }
+
+    .badge-secundario {
+        background: #ecfeff;
+        color: #0e7490;
+    }
+
+    .badge-activo {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .badge-inactivo {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .footer-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 22px;
+    }
+
+    .btn-action {
+        border-radius: 12px;
+        padding: 10px 16px;
+        font-size: 13px;
+        font-weight: 900;
+        border: none;
+        text-decoration: none !important;
+        display: inline-block;
+    }
+
+    .btn-back {
+        background: #e2e8f0;
+        color: #334155 !important;
+    }
+
+        .btn-back:hover {
+            background: #cbd5e1;
+            color: #0f172a !important;
+        }
+
+    .btn-edit {
+        background: #22c58b;
+        color: white !important;
+    }
+
+        .btn-edit:hover {
+            background: #16a974;
+            color: white !important;
+        }
+
+    .btn-delete {
+        background: #ef4444;
+        color: white !important;
+    }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            color: white !important;
+        }
+
+    .btn-company {
+        background: #1db7c1;
+        color: white !important;
+    }
+
+        .btn-company:hover {
+            background: #149da7;
+            color: white !important;
+        }
+
+    .text-muted-custom {
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    @@media (max-width: 768px) {
+        .contacto-detail-header {
+            text-align: center;
+            justify-content: center;
+        }
+
+            .contacto-detail-header h2 {
+                font-size: 28px;
+            }
+
+        .profile-box {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .footer-actions {
+            justify-content: center;
+        }
+
+        .btn-action {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="contacto-detail-page">
+
+    <div class="contacto-detail-header">
+        <div>
+            <h2>Detalle del contacto</h2>
+            <p>Información completa de la persona asociada a la empresa.</p>
+        </div>
+
+        <div class="header-actions">
+            <a href="@Url.Action("Index", "Contactos")" class="btn btn-default btn-rounded">
+                Volver
+            </a>
+
+            <a href="@Url.Action("Edit", "Contactos", new { id = Model.Id })" class="btn btn-primary btn-rounded">
+                Editar contacto
+            </a>
+        </div>
+    </div>
+
+    <div class="detail-card">
+
+        <div class="profile-box">
+            <div class="profile-avatar">
+                @(string.IsNullOrWhiteSpace(Model.Nombre) ? "C" : Model.Nombre.Substring(0, 1).ToUpper())
+            </div>
+
+            <div>
+                <div class="profile-name">
+                    @Model.Nombre
+                </div>
+
+                <div class="profile-subtitle">
+                    @if (!string.IsNullOrWhiteSpace(Model.Cargo))
+                    {
+                        @Model.Cargo
+                    }
+                    else
+                    {
+                        <span>Sin cargo registrado</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Información del contacto</div>
+
+        <div class="detail-grid">
+
+            <div class="detail-item">
+                <div class="detail-label">Empresa</div>
+                <div class="detail-value">
+                    @if (Model.Entidad != null)
+                    {
+                        @Model.Entidad.Nombre
+                    }
+                    else
+                    {
+                        <span class="text-muted-custom">Sin empresa</span>
+                    }
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Nombre completo</div>
+                <div class="detail-value">
+                    @Model.Nombre
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Cargo</div>
+                <div class="detail-value">
+                    @if (!string.IsNullOrWhiteSpace(Model.Cargo))
+                    {
+                        @Model.Cargo
+                    }
+                    else
+                    {
+                        <span class="text-muted-custom">Sin cargo registrado</span>
+                    }
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Correo</div>
+                <div class="detail-value">
+                    @if (!string.IsNullOrWhiteSpace(Model.Email))
+                    {
+                        <a href="mailto:@Model.Email">@Model.Email</a>
+                    }
+                    else
+                    {
+                        <span class="text-muted-custom">Sin correo registrado</span>
+                    }
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Teléfono</div>
+                <div class="detail-value">
+                    @if (!string.IsNullOrWhiteSpace(Model.Telefono))
+                    {
+                        @Model.Telefono
+                    }
+                    else
+                    {
+                        <span class="text-muted-custom">Sin teléfono registrado</span>
+                    }
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Tipo de contacto</div>
+                <div class="detail-value">
+                    @if (Model.EsPrincipal)
+                    {
+                        <span class="badge-custom badge-principal">Principal</span>
+                    }
+                    else
+                    {
+                        <span class="badge-custom badge-secundario">Secundario</span>
+                    }
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Estado</div>
+                <div class="detail-value">
+                    @if (Model.Activo)
+                    {
+                        <span class="badge-custom badge-activo">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge-custom badge-inactivo">Inactivo</span>
+                    }
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Fecha de registro</div>
+                <div class="detail-value">
+                    @string.Format("{0:dd/MM/yyyy HH:mm}", Model.FechaRegistro)
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-actions">
+            <a href="@Url.Action("Index", "Contactos")" class="btn-action btn-back">
+                Volver a contactos
+            </a>
+
+            @if (Model.Entidad != null)
+            {
+                <a href="@Url.Action("Details", "Entidades", new { id = Model.Entidad.Id })" class="btn-action btn-company">
+                    Ver empresa
+                </a>
+            }
+
+            <a href="@Url.Action("Edit", "Contactos", new { id = Model.Id })" class="btn-action btn-edit">
+                Editar
+            </a>
+
+            <a href="@Url.Action("Delete", "Contactos", new { id = Model.Id })" class="btn-action btn-delete">
+                Eliminar
+            </a>
+        </div>
+    </div>
+</div>

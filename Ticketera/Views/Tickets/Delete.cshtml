@@ -1,0 +1,326 @@
+﻿@model Ticketera.Models.Ticket
+
+@{
+    ViewBag.Title = "Eliminar Ticket";
+}
+
+<style>
+    .delete-page {
+        max-width: 1000px;
+        margin: 30px auto;
+        padding: 0 15px;
+    }
+
+    .delete-header {
+        background: linear-gradient(135deg, #7f1d1d, #991b1b);
+        color: white;
+        border-radius: 18px;
+        padding: 28px;
+        margin-bottom: 25px;
+        box-shadow: 0 12px 30px rgba(0,0,0,.12);
+    }
+
+        .delete-header h2 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .delete-header p {
+            margin-top: 8px;
+            opacity: .9;
+        }
+
+    .ticket-card {
+        background: #fff;
+        border-radius: 18px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        border: 1px solid #e5e7eb;
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 18px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 12px 20px;
+    }
+
+    .info-label {
+        font-weight: 700;
+        color: #334155;
+    }
+
+    .info-value {
+        color: #111827;
+    }
+
+    .description-box {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 15px;
+        white-space: pre-wrap;
+    }
+
+    .delete-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .btn-rounded {
+        border-radius: 12px;
+        padding: 10px 20px;
+    }
+
+    .badge-status {
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #e2e8f0;
+        color: #334155;
+        font-weight: 600;
+    }
+
+    .badge-danger-custom {
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: #fee2e2;
+        color: #991b1b;
+        font-weight: 600;
+    }
+</style>
+
+<div class="delete-page">
+
+    <div class="delete-header">
+        <h2>Eliminar ticket</h2>
+        <p>Revisa la información antes de eliminar este ticket. Esta acción no se puede deshacer.</p>
+    </div>
+
+    <div class="ticket-card">
+        <div class="section-title">Resumen del ticket</div>
+
+        <div class="info-grid">
+            <div class="info-label">Código</div>
+            <div class="info-value">#@Model.Id</div>
+
+            <div class="info-label">Título</div>
+            <div class="info-value">@Model.Titulo</div>
+
+            <div class="info-label">Empresa / Entidad</div>
+            <div class="info-value">
+                @(Model.Entidad != null ? Model.Entidad.Nombre : "Sin empresa")
+            </div>
+
+            <div class="info-label">Contacto solicitante</div>
+            <div class="info-value">
+                @(Model.Contacto != null ? Model.Contacto.Nombre : "Sin contacto")
+            </div>
+
+            <div class="info-label">Asignado a</div>
+            <div class="info-value">
+                @(Model.AsignadoA != null ? Model.AsignadoA.Nombre : "Sin asignar")
+            </div>
+
+            <div class="info-label">Estado</div>
+            <div class="info-value">
+                <span class="badge-status">@Model.Estado</span>
+            </div>
+
+            <div class="info-label">Urgencia</div>
+            <div class="info-value">
+                <span class="badge-danger-custom">@Model.Urgencia</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="ticket-card">
+        <div class="section-title">Detalle del caso</div>
+
+        <div class="info-grid">
+            <div class="info-label">Tipo</div>
+            <div class="info-value">@Model.Tipo</div>
+
+            <div class="info-label">Categoría</div>
+            <div class="info-value">@Model.Categoria</div>
+
+            <div class="info-label">Preferencia de contacto</div>
+            <div class="info-value">@Model.PreferenciaContacto</div>
+
+            <div class="info-label">Fecha de apertura</div>
+            <div class="info-value">@Model.FechaApertura.ToString("dd/MM/yyyy HH:mm")</div>
+
+            <div class="info-label">Fecha de resolución</div>
+            <div class="info-value">
+                @(Model.FechaResolucion.HasValue ? Model.FechaResolucion.Value.ToString("dd/MM/yyyy HH:mm") : "Pendiente")
+            </div>
+
+            <div class="info-label">Fecha de cierre</div>
+            <div class="info-value">
+                @(Model.FechaCierre.HasValue ? Model.FechaCierre.Value.ToString("dd/MM/yyyy HH:mm") : "Pendiente")
+            </div>
+
+            <div class="info-label">Fecha de creación</div>
+            <div class="info-value">@Model.FechaCreacion.ToString("dd/MM/yyyy HH:mm")</div>
+
+            <div class="info-label">Última actualización</div>
+            <div class="info-value">
+                @(Model.FechaActualizacion.HasValue ? Model.FechaActualizacion.Value.ToString("dd/MM/yyyy HH:mm") : "Sin actualización")
+            </div>
+        </div>
+    </div>
+
+    <div class="ticket-card">
+        <div class="section-title">Descripción</div>
+
+        <div class="description-box">
+            @Model.Descripcion
+        </div>
+    </div>
+
+    <div class="ticket-card">
+        <div class="section-title">Confirmación</div>
+
+        <div class="alert alert-danger">
+            ¿Estás seguro de que deseas eliminar este ticket?
+        </div>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+    <div class="ticket-card">
+        <div class="section-title">Adjuntos</div>
+
+        @if (TempData["MensajeAdjunto"] != null)
+        {
+            <div class="alert alert-success">
+                @TempData["MensajeAdjunto"]
+            </div>
+        }
+
+        @if (TempData["ErrorAdjunto"] != null)
+        {
+            <div class="alert alert-danger">
+                @TempData["ErrorAdjunto"]
+            </div>
+        }
+
+        <div class="upload-box">
+            @using (Html.BeginForm("SubirAdjuntos", "Tickets", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("ticketId", Model.Id)
+
+                <div class="form-group">
+                    <label class="form-label-custom">Adjuntar documentos o imágenes</label>
+
+                    <input type="file"
+                           name="archivos"
+                           multiple
+                           class="form-control"
+                           accept=".jpg,.jpeg,.png,.gif,.pdf,.doc,.docx,.xls,.xlsx,.txt" />
+
+                    <div class="helper-text">
+                        Permitidos: imágenes, PDF, Word, Excel y TXT. Tamaño máximo: 10 MB por archivo.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-rounded">
+                    Subir adjuntos
+                </button>
+            }
+        </div>
+
+        <hr />
+
+        @if (Model.Adjuntos != null && Model.Adjuntos.Any())
+        {
+            <div class="adjuntos-grid">
+                @foreach (var adjunto in Model.Adjuntos.OrderByDescending(a => a.FechaSubida))
+                {
+                    bool esImagen = adjunto.Extension == ".jpg"
+                        || adjunto.Extension == ".jpeg"
+                        || adjunto.Extension == ".png"
+                        || adjunto.Extension == ".gif";
+
+                    double kb = adjunto.TamanioBytes / 1024.0;
+                    string tamanio = kb < 1024
+                        ? kb.ToString("N1") + " KB"
+                        : (kb / 1024).ToString("N1") + " MB";
+
+                    <div class="adjunto-card">
+                        <div class="adjunto-preview">
+                            @if (esImagen)
+                            {
+                                <img src="@Url.Action("VerAdjunto", "Tickets", new { id = adjunto.Id })" alt="@adjunto.NombreOriginal" />
+                            }
+                            else
+                            {
+                                <div class="adjunto-icon">
+                                    📄
+                                </div>
+                            }
+                        </div>
+
+                        <div class="adjunto-name">
+                            @adjunto.NombreOriginal
+                        </div>
+
+                        <div class="adjunto-meta">
+                            @tamanio · @adjunto.FechaSubida.ToString("dd/MM/yyyy HH:mm")
+                        </div>
+
+                        <div class="adjunto-actions">
+                            <a href="@Url.Action("DescargarAdjunto", "Tickets", new { id = adjunto.Id })"
+                               class="btn btn-info btn-xs btn-rounded">
+                                Descargar
+                            </a>
+
+                            @using (Html.BeginForm("EliminarAdjunto", "Tickets", FormMethod.Post, new { style = "display:inline;" }))
+                            {
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("id", adjunto.Id)
+
+                                <button type="submit"
+                                        class="btn btn-danger btn-xs btn-rounded"
+                                        onclick="return confirm('¿Eliminar este adjunto?');">
+                                    Eliminar
+                                </button>
+                            }
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-info">
+                Este ticket todavía no tiene archivos adjuntos.
+            </div>
+        }
+    </div>
+        
+    <div class="delete-footer">
+                <a href="@Url.Action("Index", "Tickets")" class="btn btn-default btn-rounded">
+                    Cancelar
+                </a>
+
+                <button type="submit" class="btn btn-danger btn-rounded">
+                    Eliminar ticket
+                </button>
+            </div>
+        }
+    </div>
+
+</div>

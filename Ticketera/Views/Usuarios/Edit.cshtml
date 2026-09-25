@@ -1,0 +1,362 @@
+﻿@model Ticketera.Models.Usuario
+
+@{
+    ViewBag.Title = "Editar usuario";
+    var rolSesion = Session["Rol"] != null ? Session["Rol"].ToString() : "";
+}
+
+<style>
+    .usuario-edit-page {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .usuario-edit-header {
+        background: linear-gradient(135deg, #1db7c1 0%, #22c58b 100%);
+        color: white;
+        border-radius: 22px;
+        padding: 34px 36px;
+        margin-bottom: 25px;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.16);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+        .usuario-edit-header h2 {
+            margin: 0;
+            font-weight: 900;
+            font-size: 34px;
+        }
+
+        .usuario-edit-header p {
+            margin: 8px 0 0 0;
+            opacity: .95;
+            font-size: 15px;
+        }
+
+    .edit-card {
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 28px;
+        border: 1px solid #dbeafe;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 900;
+        color: #0f172a;
+        margin-bottom: 22px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .info-box {
+        background: #f8fafc;
+        border: 1px solid #dbeafe;
+        border-radius: 16px;
+        padding: 15px 18px;
+        color: #475569;
+        font-weight: 700;
+        margin-bottom: 22px;
+    }
+
+        .info-box strong {
+            color: #0e7490;
+        }
+
+    .form-label-custom {
+        font-weight: 900;
+        color: #334155;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .required-star::after {
+        content: " *";
+        color: #dc2626;
+    }
+
+    .usuario-edit-page .form-control {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 14px;
+        min-height: 44px;
+        border: 1px solid #cbd5e1;
+        box-shadow: none;
+        padding: 10px 14px;
+    }
+
+        .usuario-edit-page .form-control:focus {
+            border-color: #1db7c1;
+            box-shadow: 0 0 0 3px rgba(29, 183, 193, .16);
+        }
+
+    .readonly-box {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        padding: 12px 14px;
+        color: #334155;
+        font-weight: 800;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+
+    .checks-box {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 16px;
+        margin-top: 8px;
+    }
+
+    .check-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-weight: 800;
+        color: #334155;
+        margin-bottom: 10px;
+    }
+
+        .check-row:last-child {
+            margin-bottom: 0;
+        }
+
+    .helper-text {
+        color: #64748b;
+        font-size: 12px;
+        margin-top: 8px;
+        font-weight: 600;
+    }
+
+    .badge-custom {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .badge-admin {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .badge-tecnico {
+        background: #ccfbf1;
+        color: #0f766e;
+    }
+
+    .badge-cliente {
+        background: #ecfeff;
+        color: #0e7490;
+    }
+
+    .footer-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+
+    .btn-action {
+        border-radius: 14px;
+        padding: 11px 18px;
+        font-size: 14px;
+        font-weight: 900;
+        border: none;
+        text-decoration: none !important;
+        display: inline-block;
+    }
+
+    .btn-back {
+        background: #e2e8f0;
+        color: #334155 !important;
+    }
+
+        .btn-back:hover {
+            background: #cbd5e1;
+            color: #0f172a !important;
+        }
+
+    .btn-save {
+        background: #22c58b;
+        color: white !important;
+        box-shadow: 0 10px 22px rgba(34, 197, 139, .22);
+    }
+
+        .btn-save:hover {
+            background: #16a974;
+            color: white !important;
+        }
+
+    .btn-password {
+        background: #1db7c1;
+        color: white !important;
+    }
+
+        .btn-password:hover {
+            background: #149da7;
+            color: white !important;
+        }
+
+    .alert-validation {
+        border-radius: 14px;
+        padding: 14px 18px;
+        font-weight: 700;
+    }
+
+    @@media (max-width: 768px) {
+        .usuario-edit-header {
+            text-align: center;
+            justify-content: center;
+        }
+
+            .usuario-edit-header h2 {
+                font-size: 28px;
+            }
+
+        .footer-actions {
+            justify-content: center;
+        }
+
+        .btn-action {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="usuario-edit-page">
+
+    <div class="usuario-edit-header">
+        <div>
+            <h2>Editar usuario</h2>
+            <p>Actualiza los datos del usuario, su rol y estado.</p>
+        </div>
+    </div>
+
+    <div class="edit-card">
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.FechaRegistro)
+            @Html.HiddenFor(model => model.ContactoId)
+            @Html.HiddenFor(model => model.CreadoPorUsuarioId)
+
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger alert-validation" })
+
+            <div class="section-title">Datos del usuario</div>
+
+            <div class="info-box">
+                La contraseña no se modifica desde esta pantalla. Usa el botón
+                <strong>Enviar cambio de clave</strong> desde la lista de usuarios.
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Usuario</label>
+
+                        @Html.TextBoxFor(
+                            model => model.NombreUsuario,
+                            new { @class = "form-control", placeholder = "Ej: jperez" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.NombreUsuario, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Nombre completo</label>
+
+                        @Html.TextBoxFor(
+                            model => model.NombreCompleto,
+                            new { @class = "form-control", placeholder = "Ej: Juan Pérez" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.NombreCompleto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-7">
+                    <div class="form-group">
+                        <label class="form-label-custom">Correo</label>
+
+                        @Html.TextBoxFor(
+                            model => model.Email,
+                            new { @class = "form-control", type = "email", placeholder = "Ej: usuario@empresa.com" }
+                        )
+
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="col-md-5">
+                    <div class="form-group">
+                        <label class="form-label-custom required-star">Rol</label>
+
+                        @if (rolSesion == "Tecnico")
+                        {
+                            @Html.HiddenFor(model => model.Rol)
+
+                            <div class="readonly-box">
+                                <span class="badge-custom badge-cliente">Cliente</span>
+                            </div>
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(
+                                model => model.Rol,
+                                (SelectList)ViewBag.Roles,
+                                "-- Selecciona rol --",
+                                new { @class = "form-control" }
+                            )
+                        }
+
+                        @Html.ValidationMessageFor(model => model.Rol, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="checks-box">
+                <label class="check-row">
+                    @Html.CheckBoxFor(model => model.Activo)
+                    Usuario activo
+                </label>
+
+                <div class="helper-text">
+                    Fecha de registro: @string.Format("{0:dd/MM/yyyy HH:mm}", Model.FechaRegistro)
+                </div>
+            </div>
+
+            <div class="footer-actions">
+                <a href="@Url.Action("Index", "Usuarios")" class="btn-action btn-back">
+                    Cancelar
+                </a>
+
+                <button type="submit" class="btn-action btn-save">
+                    Guardar cambios
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

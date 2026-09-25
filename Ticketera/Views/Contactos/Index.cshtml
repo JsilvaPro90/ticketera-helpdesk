@@ -1,0 +1,499 @@
+﻿@model IEnumerable<Ticketera.Models.Contacto>
+
+@{
+    ViewBag.Title = "Contactos";
+    var rol = Session["Rol"] != null ? Session["Rol"].ToString() : "";
+}
+
+<style>
+    .contactos-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .contactos-header {
+        background: linear-gradient(135deg, #1db7c1 0%, #22c58b 100%);
+        color: white;
+        border-radius: 22px;
+        padding: 34px 36px;
+        margin-bottom: 25px;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.16);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+        .contactos-header h2 {
+            margin: 0;
+            font-weight: 900;
+            font-size: 34px;
+        }
+
+        .contactos-header p {
+            margin: 8px 0 0 0;
+            opacity: .95;
+            font-size: 15px;
+        }
+
+    .contactos-actions-header {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-rounded {
+        border-radius: 14px;
+        padding: 10px 18px;
+        font-weight: 800;
+    }
+
+    .contactos-header .btn-primary {
+        background: #ffffff;
+        color: #13adb8;
+        border: none;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+    }
+
+        .contactos-header .btn-primary:hover {
+            background: #f8ffff;
+            color: #0f9ea8;
+        }
+
+    .contactos-card {
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 24px;
+        border: 1px solid #dbeafe;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .table-contactos {
+        margin-bottom: 0;
+    }
+
+        .table-contactos thead th {
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 900;
+            white-space: nowrap;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 14px 12px;
+        }
+
+        .table-contactos tbody td {
+            vertical-align: middle;
+            padding: 15px 12px;
+            border-top: 1px solid #e5e7eb;
+            color: #0f172a;
+        }
+
+    .empresa-name {
+        font-weight: 900;
+        color: #0f172a;
+        text-transform: uppercase;
+        max-width: 260px;
+    }
+
+    .contacto-name {
+        font-weight: 900;
+        color: #0f172a;
+        max-width: 220px;
+    }
+
+    .cargo-name {
+        font-weight: 600;
+        color: #1e293b;
+        max-width: 220px;
+    }
+
+    .contacto-email a {
+        color: #0e7490;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+        .contacto-email a:hover {
+            text-decoration: underline;
+        }
+
+    .telefono-text {
+        font-weight: 700;
+        color: #1e293b;
+        white-space: nowrap;
+    }
+
+    .text-muted-small {
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .badge-custom {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .badge-principal {
+        background: #ccfbf1;
+        color: #0f766e;
+    }
+
+    .badge-secundario {
+        background: #ecfeff;
+        color: #0e7490;
+    }
+
+    .badge-activo {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .badge-inactivo {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .contacto-actions {
+        display: flex;
+        gap: 7px;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+    .btn-action {
+        border-radius: 12px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 900;
+        border: none;
+        text-decoration: none !important;
+        white-space: nowrap;
+        display: inline-block;
+    }
+
+    .btn-view {
+        background: #1db7c1;
+        color: white !important;
+    }
+
+        .btn-view:hover {
+            background: #149da7;
+            color: white !important;
+        }
+
+    .btn-edit {
+        background: #22c58b;
+        color: white !important;
+    }
+
+        .btn-edit:hover {
+            background: #16a974;
+            color: white !important;
+        }
+
+    .btn-delete {
+        background: #ef4444;
+        color: white !important;
+    }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            color: white !important;
+        }
+
+    .alert-custom {
+        border-radius: 14px;
+        padding: 14px 18px;
+        font-weight: 700;
+    }
+
+    .delete-form {
+        margin: 0;
+        display: inline-block;
+    }
+
+    .swal2-popup {
+        border-radius: 22px !important;
+        padding: 28px !important;
+    }
+
+    .swal2-title {
+        color: #0f172a !important;
+        font-weight: 900 !important;
+    }
+
+    .swal2-html-container {
+        color: #475569 !important;
+        font-weight: 600 !important;
+    }
+
+    .swal2-confirm {
+        background: #ef4444 !important;
+        border-radius: 12px !important;
+        font-weight: 900 !important;
+        padding: 10px 20px !important;
+    }
+
+    .swal2-cancel {
+        background: #e2e8f0 !important;
+        color: #334155 !important;
+        border-radius: 12px !important;
+        font-weight: 900 !important;
+        padding: 10px 20px !important;
+    }
+
+    .empty-box {
+        text-align: center;
+        padding: 55px 20px;
+        color: #64748b;
+    }
+
+        .empty-box h4 {
+            color: #0f172a;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+    @@media (max-width: 768px) {
+        .contactos-header {
+            text-align: center;
+            justify-content: center;
+        }
+
+            .contactos-header h2 {
+                font-size: 28px;
+            }
+
+        .contactos-actions-header {
+            justify-content: center;
+        }
+
+        .contacto-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+            .contacto-actions a {
+                width: 100%;
+                text-align: center;
+            }
+    }
+</style>
+
+<div class="contactos-page">
+
+    <div class="contactos-header">
+        <div>
+            <h2>Contactos</h2>
+            <p>Administra las personas de contacto asociadas a cada empresa.</p>
+        </div>
+
+        <div class="contactos-actions-header">
+            <a href="@Url.Action("Create", "Contactos")" class="btn btn-primary btn-rounded">
+                Nuevo contacto
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success alert-custom">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-custom">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="contactos-card">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-contactos">
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th>Contacto</th>
+                            <th>Cargo</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                            <th>Tipo</th>
+                            <th>Estado</th>
+                            <th>Fecha registro</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var fechaRegistro = string.Format("{0:dd/MM/yyyy}", item.FechaRegistro);
+                            var horaRegistro = string.Format("{0:HH:mm}", item.FechaRegistro);
+
+                            <tr>
+                                <td>
+                                    <div class="empresa-name">
+                                        @(item.Entidad != null ? item.Entidad.Nombre : "Sin empresa")
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="contacto-name">
+                                        @item.Nombre
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(item.Cargo))
+                                    {
+                                        <div class="cargo-name">@item.Cargo</div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted-small">Sin cargo</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <div class="contacto-email">
+                                        @if (!string.IsNullOrWhiteSpace(item.Email))
+                                        {
+                                            <a href="mailto:@item.Email">@item.Email</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted-small">Sin correo</span>
+                                        }
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(item.Telefono))
+                                    {
+                                        <span class="telefono-text">@item.Telefono</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted-small">Sin teléfono</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (item.EsPrincipal)
+                                    {
+                                        <span class="badge-custom badge-principal">Principal</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-custom badge-secundario">Secundario</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (item.Activo)
+                                    {
+                                        <span class="badge-custom badge-activo">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-custom badge-inactivo">Inactivo</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(fechaRegistro))
+                                    {
+                                        @fechaRegistro
+                                        <div class="text-muted-small">
+                                            @horaRegistro
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted-small">Sin fecha</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <div class="contacto-actions">
+                                        <a href="@Url.Action("Details", "Contactos", new { id = item.Id })"
+                                           class="btn-action btn-view">
+                                            Ver
+                                        </a>
+
+                                        <a href="@Url.Action("Edit", "Contactos", new { id = item.Id })"
+                                           class="btn-action btn-edit">
+                                            Editar
+                                        </a>
+
+                                        @using (Html.BeginForm("Delete", "Contactos", new { id = item.Id }, FormMethod.Post, new { @class = "delete-form form-eliminar-contacto" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit"
+                                                    class="btn-action btn-delete">
+                                                Eliminar
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-box">
+                <h4>No hay contactos registrados</h4>
+                <p>Cuando registres contactos, aparecerán en esta sección.</p>
+
+                <a href="@Url.Action("Create", "Contactos")" class="btn btn-primary btn-rounded">
+                    Registrar primer contacto
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".form-eliminar-contacto").on("submit", function (e) {
+                e.preventDefault();
+
+                var form = this;
+
+                Swal.fire({
+                    title: "¿Eliminar contacto?",
+                    text: "Esta acción no se puede deshacer.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar",
+                    reverseButtons: true,
+                    focusCancel: true,
+                    background: "#ffffff",
+                    color: "#0f172a"
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+}

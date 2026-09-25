@@ -1,0 +1,353 @@
+﻿@model Ticketera.Models.ViewModels.LoginViewModel
+
+@{
+    ViewBag.Title = "Iniciar sesión";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Iniciar sesión - Ticketera</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    @Styles.Render("~/Content/css")
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #5edce6 0%, #9df1dc 100%);
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 35px;
+        }
+
+        .login-wrapper {
+            width: 1280px;
+            max-width: 96%;
+            min-height: 690px;
+            background: #ffffff;
+            border-radius: 30px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 68% 32%;
+            box-shadow: 0 30px 80px rgba(15, 23, 42, 0.24);
+        }
+
+        .login-left {
+            position: relative;
+            background-image: url('@Url.Content("~/Content/img/login-cover-tickets.png.png")');
+            background-size: cover;
+            background-position: left center;
+            background-repeat: no-repeat;
+            overflow: hidden;
+            min-height: 690px;
+        }
+
+        .login-left::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                90deg,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.03) 65%,
+                rgba(255,255,255,0.18) 100%
+            );
+        }
+
+        .login-right {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 50px;
+            background: rgba(255, 255, 255, 0.98);
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 410px;
+        }
+
+        .login-badge {
+            display: inline-block;
+            margin-bottom: 18px;
+            padding: 8px 15px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 800;
+            color: #0891b2;
+            background: #e0fafa;
+        }
+
+        .login-title {
+            margin: 0;
+            font-size: 36px;
+            font-weight: 900;
+            color: #0f172a;
+            letter-spacing: -0.7px;
+        }
+
+        .login-subtitle {
+            margin: 10px 0 34px;
+            font-size: 15px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label-custom {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .login-right .form-control {
+            width: 100%;
+            height: 52px;
+            padding: 0 18px;
+            border: 1px solid #cbd5e1;
+            border-radius: 18px;
+            outline: none;
+            font-size: 14px;
+            color: #0f172a;
+            background: #ffffff;
+            box-shadow: none;
+            transition: all 0.25s ease;
+        }
+
+        .login-right .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        .login-right .form-control:focus {
+            border-color: #0db6c9;
+            box-shadow: 0 0 0 4px rgba(13, 182, 201, 0.15);
+        }
+
+        .login-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin: 8px 0 26px;
+            font-size: 13px;
+        }
+
+        .remember-option {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #334155;
+            cursor: pointer;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .remember-option input {
+            accent-color: #12b8c9;
+        }
+
+        .login-options a {
+            color: #0284c7;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .login-options a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            width: 100%;
+            height: 54px;
+            border: none;
+            border-radius: 22px;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 900;
+            color: #ffffff;
+            background: linear-gradient(135deg, #0db6c9 0%, #20c96b 100%);
+            box-shadow: 0 15px 30px rgba(13, 182, 201, 0.28);
+            transition: all 0.25s ease;
+        }
+
+        .btn-login:hover,
+        .btn-login:focus {
+            color: #ffffff;
+            transform: translateY(-2px);
+            box-shadow: 0 18px 38px rgba(13, 182, 201, 0.36);
+        }
+
+        .register-link {
+            margin-top: 28px;
+            text-align: center;
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .register-link a {
+            color: #0284c7;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert-validation {
+            border-radius: 14px;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
+
+        .field-validation-error,
+        .text-danger {
+            display: block;
+            margin-top: 6px;
+            color: #dc2626 !important;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .input-validation-error {
+            border-color: #ef4444 !important;
+        }
+
+        @@media (max-width: 1100px) {
+            .login-wrapper {
+                grid-template-columns: 60% 40%;
+            }
+        }
+
+        @@media (max-width: 850px) {
+            body {
+                padding: 20px;
+            }
+
+            .login-wrapper {
+                max-width: 520px;
+                min-height: auto;
+                grid-template-columns: 1fr;
+            }
+
+            .login-left {
+                min-height: 310px;
+                background-position: left center;
+            }
+
+            .login-right {
+                padding: 40px 30px;
+            }
+
+            .login-title {
+                font-size: 31px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-wrapper">
+
+        <div class="login-left"></div>
+
+        <div class="login-right">
+            <div class="login-box">
+
+                <span class="login-badge">Sistema de Tickets</span>
+
+                <h2 class="login-title">Iniciar sesión</h2>
+
+                <p class="login-subtitle">
+                    Accede con tu usuario y contraseña para gestionar tus tickets.
+                </p>
+
+                @if (TempData["MensajeLogin"] != null)
+                {
+                    <div class="alert alert-success alert-validation">
+                        @TempData["MensajeLogin"]
+                    </div>
+                }
+
+                @using (Html.BeginForm("Login", "Account", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+
+                    @Html.ValidationSummary(true, "", new { @class = "alert alert-danger alert-validation" })
+
+                    <div class="form-group">
+                        <label class="form-label-custom">Usuario</label>
+                        @Html.TextBoxFor(m => m.NombreUsuario, new
+                        {
+                            @class = "form-control",
+                            placeholder = "Usuario o correo",
+                            autocomplete = "username"
+                        })
+                        @Html.ValidationMessageFor(m => m.NombreUsuario, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label-custom">Contraseña</label>
+                        @Html.PasswordFor(m => m.Password, new
+                        {
+                            @class = "form-control",
+                            placeholder = "Contraseña",
+                            autocomplete = "current-password"
+                        })
+                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="login-options">
+                        <label class="remember-option">
+                            @Html.CheckBoxFor(m => m.Recordarme)
+                            <span>Recordarme</span>
+                        </label>
+
+                        <a href="@Url.Action("ForgotPassword", "Account")">
+                            ¿Olvidaste tu contraseña?
+                        </a>
+                    </div>
+
+                    <button type="submit" class="btn-login">
+                        Ingresar
+                    </button>
+
+                    <div class="register-link">
+                        ¿No tienes cuenta?
+                        <a href="@Url.Action("Register", "Account")">
+                            Crear una cuenta
+                        </a>
+                    </div>
+                }
+
+            </div>
+        </div>
+
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/jqueryval")
+</body>
+</html>

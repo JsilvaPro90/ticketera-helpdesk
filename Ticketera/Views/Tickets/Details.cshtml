@@ -1,0 +1,747 @@
+﻿@model Ticketera.Models.Ticket
+
+@{
+    ViewBag.Title = "Detalle del Ticket";
+    var rol = Session["Rol"] != null ? Session["Rol"].ToString() : "";
+}
+
+@functions {
+    public string EstadoClass(string estado)
+    {
+        switch ((estado ?? "").Trim().ToLower())
+        {
+            case "abierto":
+                return "badge-custom badge-abierto";
+            case "en proceso":
+                return "badge-custom badge-proceso";
+            case "pendiente":
+                return "badge-custom badge-pendiente";
+            case "resuelto":
+                return "badge-custom badge-resuelto";
+            case "cerrado":
+                return "badge-custom badge-cerrado";
+            default:
+                return "badge-custom badge-default";
+        }
+    }
+
+    public string UrgenciaClass(string urgencia)
+    {
+        switch ((urgencia ?? "").Trim().ToLower())
+        {
+            case "muy alta":
+                return "badge-custom badge-muyalta";
+            case "alta":
+                return "badge-custom badge-alta";
+            case "media":
+                return "badge-custom badge-media";
+            case "baja":
+                return "badge-custom badge-baja";
+            default:
+                return "badge-custom badge-default";
+        }
+    }
+}
+
+<style>
+    .ticket-detail-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .ticket-detail-header {
+        background: linear-gradient(135deg, #1db7c1 0%, #22c58b 100%);
+        color: white;
+        border-radius: 22px;
+        padding: 34px 36px;
+        margin-bottom: 25px;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.16);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+        .ticket-detail-header h2 {
+            margin: 0;
+            font-weight: 900;
+            font-size: 34px;
+        }
+
+        .ticket-detail-header p {
+            margin: 8px 0 0 0;
+            opacity: .95;
+            font-size: 15px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+    .ticket-header-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-rounded {
+        border-radius: 14px;
+        padding: 10px 18px;
+        font-weight: 900;
+        text-decoration: none !important;
+        border: none;
+        display: inline-block;
+    }
+
+    .ticket-detail-header .btn-primary {
+        background: #ffffff;
+        color: #13adb8 !important;
+        border: none;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+    }
+
+        .ticket-detail-header .btn-primary:hover {
+            background: #f8ffff;
+            color: #0f9ea8 !important;
+        }
+
+    .ticket-detail-header .btn-default {
+        background: rgba(255,255,255,.18);
+        color: white !important;
+        border: 1px solid rgba(255,255,255,.35);
+    }
+
+        .ticket-detail-header .btn-default:hover {
+            background: rgba(255,255,255,.25);
+            color: white !important;
+        }
+
+    .detail-card {
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 28px;
+        border: 1px solid #dbeafe;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+        margin-bottom: 22px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 900;
+        color: #0f172a;
+        margin-bottom: 22px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .ticket-profile {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 25px;
+        padding: 18px;
+        border-radius: 18px;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+    }
+
+    .ticket-avatar {
+        width: 74px;
+        height: 74px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, #1db7c1, #22c58b);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        font-weight: 900;
+        box-shadow: 0 10px 22px rgba(34, 197, 139, .22);
+        flex-shrink: 0;
+    }
+
+    .ticket-title-main {
+        font-size: 25px;
+        font-weight: 900;
+        color: #0f172a;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+    }
+
+    .ticket-subtitle {
+        color: #64748b;
+        font-weight: 700;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .detail-item {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 16px;
+    }
+
+    .detail-label {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 7px;
+    }
+
+    .detail-value {
+        color: #0f172a;
+        font-size: 15px;
+        font-weight: 800;
+        word-break: break-word;
+    }
+
+    .description-box {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+        padding: 20px;
+        color: #0f172a;
+        font-size: 15px;
+        line-height: 1.7;
+        white-space: pre-line;
+    }
+
+    .badge-custom {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .badge-abierto {
+        background: #ccfbf1;
+        color: #0f766e;
+    }
+
+    .badge-proceso {
+        background: #d1fae5;
+        color: #047857;
+    }
+
+    .badge-pendiente {
+        background: #cffafe;
+        color: #0e7490;
+    }
+
+    .badge-resuelto {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .badge-cerrado {
+        background: #e5e7eb;
+        color: #374151;
+    }
+
+    .badge-muyalta {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .badge-alta {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .badge-media {
+        background: #ecfeff;
+        color: #0e7490;
+    }
+
+    .badge-baja {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .badge-default {
+        background: #e5e7eb;
+        color: #475569;
+    }
+
+    .footer-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 22px;
+    }
+
+    .btn-action {
+        border-radius: 14px;
+        padding: 11px 18px;
+        font-size: 14px;
+        font-weight: 900;
+        border: none;
+        text-decoration: none !important;
+        display: inline-block;
+    }
+
+    .btn-back {
+        background: #e2e8f0;
+        color: #334155 !important;
+    }
+
+        .btn-back:hover {
+            background: #cbd5e1;
+            color: #0f172a !important;
+        }
+
+    .btn-edit {
+        background: #22c58b;
+        color: white !important;
+        box-shadow: 0 10px 22px rgba(34, 197, 139, .22);
+    }
+
+        .btn-edit:hover {
+            background: #16a974;
+            color: white !important;
+        }
+
+    .text-muted-custom {
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .table-adjuntos {
+        margin-bottom: 0;
+    }
+
+        .table-adjuntos thead th {
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 900;
+            white-space: nowrap;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 14px 12px;
+        }
+
+        .table-adjuntos tbody td {
+            vertical-align: middle;
+            padding: 15px 12px;
+            border-top: 1px solid #e5e7eb;
+            color: #0f172a;
+        }
+
+    .adjunto-actions {
+        display: flex;
+        gap: 7px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+        .adjunto-actions form {
+            margin: 0;
+        }
+
+    .btn-view {
+        background: #1db7c1;
+        color: white !important;
+    }
+
+        .btn-view:hover {
+            background: #149da7;
+            color: white !important;
+        }
+
+    .btn-delete {
+        background: #ef4444;
+        color: white !important;
+    }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            color: white !important;
+        }
+
+    .empty-box {
+        text-align: center;
+        padding: 35px 20px;
+        color: #64748b;
+    }
+
+        .empty-box h4 {
+            color: #0f172a;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+    @@media (max-width: 768px) {
+        .ticket-detail-header {
+            text-align: center;
+            justify-content: center;
+        }
+
+            .ticket-detail-header h2 {
+                font-size: 28px;
+            }
+
+        .ticket-header-actions {
+            justify-content: center;
+        }
+
+        .ticket-profile {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .footer-actions {
+            justify-content: center;
+        }
+
+        .btn-action,
+        .btn-rounded {
+            width: 100%;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="ticket-detail-page">
+
+    <div class="ticket-detail-header">
+        <div>
+            <h2>Ticket #@Model.Id</h2>
+            <p>@Model.Titulo</p>
+        </div>
+
+        <div class="ticket-header-actions">
+            <a href="@Url.Action("Index", "Tickets")" class="btn btn-default btn-rounded">
+                Volver al listado
+            </a>
+
+            @if (rol == "Admin" || rol == "Tecnico")
+            {
+                <a href="@Url.Action("Edit", "Tickets", new { id = Model.Id })" class="btn btn-primary btn-rounded">
+                    Editar ticket
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <div class="ticket-profile">
+            <div class="ticket-avatar">
+                #@Model.Id
+            </div>
+
+            <div>
+                <div class="ticket-title-main">
+                    @Model.Titulo
+                </div>
+
+                <div class="ticket-subtitle">
+                    @(Model.Entidad != null ? Model.Entidad.Nombre : "Sin empresa")
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Resumen</div>
+
+        <div class="detail-grid">
+            <div class="detail-item">
+                <div class="detail-label">Empresa / Entidad</div>
+                <div class="detail-value">
+                    @(Model.Entidad != null ? Model.Entidad.Nombre : "No registrada")
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Contacto solicitante</div>
+                <div class="detail-value">
+                    @(Model.Contacto != null ? Model.Contacto.Nombre : "No registrado")
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Asignado a</div>
+                <div class="detail-value">
+                    @(Model.AsignadoA != null ? Model.AsignadoA.Nombre : "Sin asignar")
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Estado</div>
+                <div class="detail-value">
+                    <span class="@EstadoClass(Model.Estado)">
+                        @Model.Estado
+                    </span>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Urgencia</div>
+                <div class="detail-value">
+                    <span class="@UrgenciaClass(Model.Urgencia)">
+                        @Model.Urgencia
+                    </span>
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Preferencia de contacto</div>
+                <div class="detail-value">
+                    @Model.PreferenciaContacto
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <div class="section-title">Información del caso</div>
+
+        <div class="detail-grid">
+            <div class="detail-item">
+                <div class="detail-label">Título</div>
+                <div class="detail-value">@Model.Titulo</div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Tipo</div>
+                <div class="detail-value">@Model.Tipo</div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Categoría</div>
+                <div class="detail-value">@Model.Categoria</div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Estado del caso</div>
+                <div class="detail-value">
+                    <span class="@EstadoClass(Model.Estado)">
+                        @Model.Estado
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <div class="section-title">Descripción</div>
+
+        <div class="description-box">
+            @if (!string.IsNullOrWhiteSpace(Model.Descripcion))
+            {
+                @Model.Descripcion
+            }
+            else
+            {
+                <span class="text-muted-custom">Sin descripción registrada.</span>
+            }
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <div class="section-title">Fechas</div>
+
+        <div class="detail-grid">
+            <div class="detail-item">
+                <div class="detail-label">Fecha de apertura</div>
+                <div class="detail-value">
+                    @string.Format("{0:dd/MM/yyyy HH:mm}", Model.FechaApertura)
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Fecha de resolución</div>
+                <div class="detail-value">
+                    @if (Model.FechaResolucion.HasValue)
+                    {
+                        @Model.FechaResolucion.Value.ToString("dd/MM/yyyy HH:mm")
+                    }
+                    else
+                    {
+                        <span class="text-muted-custom">No registrada</span>
+                    }
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Fecha de cierre</div>
+                <div class="detail-value">
+                    @if (Model.FechaCierre.HasValue)
+                    {
+                        @Model.FechaCierre.Value.ToString("dd/MM/yyyy HH:mm")
+                    }
+                    else
+                    {
+                        <span class="text-muted-custom">No registrada</span>
+                    }
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Fecha de creación</div>
+                <div class="detail-value">
+                    @string.Format("{0:dd/MM/yyyy HH:mm}", Model.FechaCreacion)
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Última actualización</div>
+                <div class="detail-value">
+                    @if (Model.FechaActualizacion.HasValue)
+                    {
+                        @Model.FechaActualizacion.Value.ToString("dd/MM/yyyy HH:mm")
+                    }
+                    else
+                    {
+                        <span class="text-muted-custom">No registrada</span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <div class="section-title">Adjuntos</div>
+
+        @if (TempData["MensajeAdjunto"] != null)
+        {
+            <div class="alert alert-success alert-validation">
+                @TempData["MensajeAdjunto"]
+            </div>
+        }
+
+        @if (TempData["ErrorAdjunto"] != null)
+        {
+            <div class="alert alert-danger alert-validation">
+                @TempData["ErrorAdjunto"]
+            </div>
+        }
+
+        <div class="info-box">
+            Puedes adjuntar imágenes, PDF, Word, Excel o TXT. Máximo 10 MB por archivo.
+        </div>
+
+        @using (Html.BeginForm("SubirAdjuntos", "Tickets", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="ticketId" value="@Model.Id" />
+
+            <div class="row">
+                <div class="col-md-9">
+                    <input type="file"
+                           name="archivos"
+                           multiple
+                           class="form-control" />
+                </div>
+
+                <div class="col-md-3">
+                    <button type="submit" class="btn-action btn-save" style="width:100%;">
+                        Subir adjuntos
+                    </button>
+                </div>
+            </div>
+        }
+
+        <hr />
+
+        @if (Model.Adjuntos != null && Model.Adjuntos.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-adjuntos">
+                    <thead>
+                        <tr>
+                            <th>Archivo</th>
+                            <th>Tipo</th>
+                            <th>Tamaño</th>
+                            <th>Fecha subida</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var adjunto in Model.Adjuntos.OrderByDescending(a => a.FechaSubida))
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@adjunto.NombreOriginal</strong>
+                                </td>
+
+                                <td>
+                                    @adjunto.Extension
+                                </td>
+
+                                <td>
+                                    @{
+                                        decimal tamanioMb = adjunto.TamanioBytes / 1024m / 1024m;
+                                    }
+
+                                    @tamanioMb.ToString("0.00") MB
+                                </td>
+
+                                <td>
+                                    @string.Format("{0:dd/MM/yyyy HH:mm}", adjunto.FechaSubida)
+                                </td>
+
+                                <td>
+                                    <div class="adjunto-actions">
+                                        <a href="@Url.Action("VerAdjunto", "Tickets", new { id = adjunto.Id })"
+                                           target="_blank"
+                                           class="btn-action btn-view">
+                                            Ver
+                                        </a>
+
+                                        <a href="@Url.Action("DescargarAdjunto", "Tickets", new { id = adjunto.Id })"
+                                           class="btn-action btn-back">
+                                            Descargar
+                                        </a>
+
+                                        @using (Html.BeginForm("EliminarAdjunto", "Tickets", new { id = adjunto.Id }, FormMethod.Post, new { @class = "form-eliminar-adjunto" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit" class="btn-action btn-delete">
+                                                Eliminar
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-box">
+                <h4>No hay adjuntos registrados</h4>
+                <p>Este ticket todavía no tiene archivos adjuntos.</p>
+            </div>
+        }
+    </div>
+
+    <div class="footer-actions">
+        <a href="@Url.Action("Index", "Tickets")" class="btn-action btn-back">
+            Volver a tickets
+        </a>
+
+        @if ((rol == "Admin" || rol == "Tecnico") && Model.Estado != "Cerrado")
+        {
+            <a href="@Url.Action("Edit", "Tickets", new { id = Model.Id })" class="btn btn-primary btn-rounded">
+                Editar ticket
+            </a>
+        }
+    </div>
+</div>

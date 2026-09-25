@@ -1,0 +1,452 @@
+﻿@model IEnumerable<Ticketera.Models.Entidad>
+
+@{
+    ViewBag.Title = "Empresas";
+    var rol = Session["Rol"] != null ? Session["Rol"].ToString() : "";
+}
+
+<style>
+    .empresas-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .empresas-header {
+        background: linear-gradient(135deg, #1db7c1 0%, #22c58b 100%);
+        color: white;
+        border-radius: 22px;
+        padding: 34px 36px;
+        margin-bottom: 25px;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.16);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+        .empresas-header h2 {
+            margin: 0;
+            font-weight: 900;
+            font-size: 34px;
+        }
+
+        .empresas-header p {
+            margin: 8px 0 0 0;
+            opacity: .95;
+            font-size: 15px;
+        }
+
+    .empresas-actions-header {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-rounded {
+        border-radius: 14px;
+        padding: 10px 18px;
+        font-weight: 800;
+    }
+
+    .empresas-header .btn-primary {
+        background: #ffffff;
+        color: #13adb8;
+        border: none;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+    }
+
+        .empresas-header .btn-primary:hover {
+            background: #f8ffff;
+            color: #0f9ea8;
+        }
+
+    .empresas-card {
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 24px;
+        border: 1px solid #dbeafe;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .table-empresas {
+        margin-bottom: 0;
+    }
+
+        .table-empresas thead th {
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 900;
+            white-space: nowrap;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 14px 12px;
+        }
+
+        .table-empresas tbody td {
+            vertical-align: middle;
+            padding: 15px 12px;
+            border-top: 1px solid #e5e7eb;
+            color: #0f172a;
+        }
+
+    .empresa-name {
+        font-weight: 900;
+        color: #0f172a;
+        text-transform: uppercase;
+        margin-bottom: 6px;
+        max-width: 280px;
+    }
+
+    .empresa-direccion {
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.45;
+        max-width: 300px;
+    }
+
+    .empresa-ruc,
+    .empresa-contacto {
+        font-weight: 700;
+        color: #1e293b;
+        white-space: nowrap;
+    }
+
+    .text-muted-small {
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .badge-custom {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .badge-activo {
+        background: #ccfbf1;
+        color: #0f766e;
+    }
+
+    .badge-inactivo {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .badge-contactos {
+        background: #ecfeff;
+        color: #0e7490;
+    }
+
+    .empresa-actions {
+        display: flex;
+        gap: 7px;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+    .btn-action {
+        border-radius: 12px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 900;
+        border: none;
+        text-decoration: none !important;
+        white-space: nowrap;
+        display: inline-block;
+    }
+
+    .btn-view {
+        background: #1db7c1;
+        color: white !important;
+    }
+
+        .btn-view:hover {
+            background: #149da7;
+            color: white !important;
+        }
+
+    .btn-edit {
+        background: #22c58b;
+        color: white !important;
+    }
+
+        .btn-edit:hover {
+            background: #16a974;
+            color: white !important;
+        }
+
+    .btn-delete {
+        background: #ef4444;
+        color: white !important;
+    }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            color: white !important;
+        }
+
+    .form-eliminar-empresa {
+        margin: 0;
+        display: inline-block;
+    }
+
+    .swal2-popup {
+        border-radius: 22px !important;
+        padding: 28px !important;
+    }
+
+    .swal2-title {
+        color: #0f172a !important;
+        font-weight: 900 !important;
+    }
+
+    .swal2-html-container {
+        color: #475569 !important;
+        font-weight: 600 !important;
+    }
+
+    .swal2-confirm {
+        background: #ef4444 !important;
+        border-radius: 12px !important;
+        font-weight: 900 !important;
+        padding: 10px 20px !important;
+    }
+
+    .swal2-cancel {
+        background: #e2e8f0 !important;
+        color: #334155 !important;
+        border-radius: 12px !important;
+        font-weight: 900 !important;
+        padding: 10px 20px !important;
+    }
+
+    .alert-custom {
+        border-radius: 14px;
+        padding: 14px 18px;
+        font-weight: 700;
+    }
+
+    .empty-box {
+        text-align: center;
+        padding: 55px 20px;
+        color: #64748b;
+    }
+
+        .empty-box h4 {
+            color: #0f172a;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+    @@media (max-width: 768px) {
+        .empresas-header {
+            text-align: center;
+            justify-content: center;
+        }
+
+            .empresas-header h2 {
+                font-size: 28px;
+            }
+
+        .empresas-actions-header {
+            justify-content: center;
+        }
+
+        .empresa-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+</style>
+
+<div class="empresas-page">
+
+    <div class="empresas-header">
+        <div>
+            <h2>Empresas</h2>
+            <p>Administra las empresas clientes que podrán registrar tickets.</p>
+        </div>
+
+        <div class="empresas-actions-header">
+            <a href="@Url.Action("Create", "Entidades")" class="btn btn-primary btn-rounded">
+                Nueva empresa
+            </a>
+        </div>
+    </div>
+
+    <div class="empresas-card">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-empresas">
+                    <thead>
+                        <tr>
+                            <th>Empresa</th>
+                            <th>RUC</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                            <th>Contactos</th>
+                            <th>Estado</th>
+                            <th>Fecha registro</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var cantidadContactos = item.Contactos != null ? item.Contactos.Count : 0;
+
+                            <tr>
+                                <td>
+                                    <div class="empresa-name">
+                                        @item.Nombre
+                                    </div>
+
+                                    @if (!string.IsNullOrWhiteSpace(item.Direccion))
+                                    {
+                                        <div class="empresa-direccion">
+                                            @item.Direccion
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="text-muted-small">
+                                            Sin dirección registrada
+                                        </div>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(item.Ruc))
+                                    {
+                                        <span class="empresa-ruc">@item.Ruc</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted-small">Sin RUC</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(item.Email))
+                                    {
+                                        <a href="mailto:@item.Email">@item.Email</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted-small">Sin correo</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(item.Telefono))
+                                    {
+                                        <span class="empresa-contacto">@item.Telefono</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted-small">Sin teléfono</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <span class="badge-custom badge-contactos">
+                                        @cantidadContactos contacto(s)
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @if (item.Activo)
+                                    {
+                                        <span class="badge-custom badge-activo">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-custom badge-inactivo">Inactivo</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @item.FechaRegistro.ToString("dd/MM/yyyy")
+                                    <div class="text-muted-small">
+                                        @item.FechaRegistro.ToString("HH:mm")
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="empresa-actions">
+                                        <a href="@Url.Action("Details", "Entidades", new { id = item.Id })"
+                                           class="btn-action btn-view">
+                                            Ver
+                                        </a>
+
+                                        <a href="@Url.Action("Edit", "Entidades", new { id = item.Id })"
+                                           class="btn-action btn-edit">
+                                            Editar
+                                        </a>
+
+                                        @using (Html.BeginForm("Delete", "Entidades", new { id = item.Id }, FormMethod.Post, new { @class = "form-eliminar-empresa" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit" class="btn-action btn-delete">
+                                                Eliminar
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-box">
+                <h4>No hay empresas registradas</h4>
+                <p>Cuando registres empresas, aparecerán en esta sección.</p>
+
+                <a href="@Url.Action("Create", "Entidades")" class="btn btn-primary btn-rounded">
+                    Registrar primera empresa
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".form-eliminar-empresa").on("submit", function (e) {
+                e.preventDefault();
+
+                var form = this;
+
+                Swal.fire({
+                    title: "¿Eliminar empresa?",
+                    text: "Esta acción no se puede deshacer. Si la empresa tiene contactos o tickets, no podrá eliminarse.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar",
+                    reverseButtons: true,
+                    focusCancel: true,
+                    background: "#ffffff",
+                    color: "#0f172a"
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+}

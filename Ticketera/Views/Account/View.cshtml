@@ -1,0 +1,60 @@
+﻿@model Ticketera.Models.ViewModels.RegisterViewModel
+
+@{
+    ViewBag.Title = "Registrarse";
+}
+
+<div class="login-page">
+    <div class="login-card">
+        <h2 class="login-title">Crear cuenta</h2>
+        <p class="login-subtitle">Registra un nuevo usuario para acceder al sistema.</p>
+
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger alert-validation" })
+
+            <div class="form-group">
+                <label class="form-label-custom">Usuario</label>
+                @Html.TextBoxFor(m => m.NombreUsuario, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.NombreUsuario, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label class="form-label-custom">Nombre completo</label>
+                @Html.TextBoxFor(m => m.NombreCompleto, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.NombreCompleto, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label class="form-label-custom">Correo</label>
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", type = "email" })
+                @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label class="form-label-custom">Contraseña</label>
+                @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                <label class="form-label-custom">Confirmar contraseña</label>
+                @Html.PasswordFor(m => m.ConfirmarPassword, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.ConfirmarPassword, "", new { @class = "text-danger" })
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-login">
+                Registrarme
+            </button>
+
+            <div style="margin-top:15px; text-align:center;">
+                <a href="@Url.Action("Login", "Account")">Ya tengo cuenta</a>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

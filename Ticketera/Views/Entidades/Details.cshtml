@@ -1,0 +1,739 @@
+﻿@model Ticketera.Models.Entidad
+
+@{
+    ViewBag.Title = "Detalle de Empresa";
+}
+
+<style>
+    .empresa-detail-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .empresa-detail-header {
+        background: linear-gradient(135deg, #1db7c1 0%, #22c58b 100%);
+        color: white;
+        border-radius: 22px;
+        padding: 34px 36px;
+        margin-bottom: 25px;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.16);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+        .empresa-detail-header h2 {
+            margin: 0;
+            font-weight: 900;
+            font-size: 34px;
+            text-transform: uppercase;
+        }
+
+        .empresa-detail-header p {
+            margin: 8px 0 0 0;
+            opacity: .95;
+            font-size: 15px;
+        }
+
+    .header-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-rounded {
+        border-radius: 14px;
+        padding: 10px 18px;
+        font-weight: 800;
+    }
+
+    .empresa-detail-header .btn-primary {
+        background: #ffffff;
+        color: #13adb8;
+        border: none;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+    }
+
+        .empresa-detail-header .btn-primary:hover {
+            background: #f8ffff;
+            color: #0f9ea8;
+        }
+
+    .empresa-detail-header .btn-default {
+        background: rgba(255,255,255,.18);
+        color: white;
+        border: 1px solid rgba(255,255,255,.35);
+    }
+
+        .empresa-detail-header .btn-default:hover {
+            background: rgba(255,255,255,.25);
+            color: white;
+        }
+
+    .detail-card {
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 28px;
+        border: 1px solid #dbeafe;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+        margin-bottom: 22px;
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 900;
+        color: #0f172a;
+        margin-bottom: 22px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .empresa-profile {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 25px;
+        padding: 18px;
+        border-radius: 18px;
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+    }
+
+    .empresa-avatar {
+        width: 74px;
+        height: 74px;
+        border-radius: 22px;
+        background: linear-gradient(135deg, #1db7c1, #22c58b);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 30px;
+        font-weight: 900;
+        box-shadow: 0 10px 22px rgba(34, 197, 139, .22);
+        flex-shrink: 0;
+    }
+
+    .empresa-title {
+        font-size: 25px;
+        font-weight: 900;
+        color: #0f172a;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+    }
+
+    .empresa-subtitle {
+        color: #64748b;
+        font-weight: 700;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .detail-item {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 16px;
+    }
+
+    .detail-label {
+        color: #64748b;
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 7px;
+    }
+
+    .detail-value {
+        color: #0f172a;
+        font-size: 15px;
+        font-weight: 800;
+        word-break: break-word;
+    }
+
+        .detail-value a {
+            color: #0e7490;
+            text-decoration: none;
+        }
+
+            .detail-value a:hover {
+                text-decoration: underline;
+            }
+
+    .badge-custom {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    .badge-activo {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .badge-inactivo {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .badge-principal {
+        background: #ccfbf1;
+        color: #0f766e;
+    }
+
+    .badge-secundario {
+        background: #ecfeff;
+        color: #0e7490;
+    }
+
+    .contactos-header-card {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 18px;
+    }
+
+    .contactos-count {
+        color: #64748b;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .table-contactos {
+        margin-bottom: 0;
+    }
+
+        .table-contactos thead th {
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 900;
+            white-space: nowrap;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 14px 12px;
+        }
+
+        .table-contactos tbody td {
+            vertical-align: middle;
+            padding: 15px 12px;
+            border-top: 1px solid #e5e7eb;
+            color: #0f172a;
+        }
+
+    .contacto-name {
+        font-weight: 900;
+        color: #0f172a;
+    }
+
+    .cargo-name {
+        color: #334155;
+        font-weight: 700;
+    }
+
+    .text-muted-small {
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .contacto-email a {
+        color: #0e7490;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+        .contacto-email a:hover {
+            text-decoration: underline;
+        }
+
+    .actions {
+        display: flex;
+        gap: 7px;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+        .actions form {
+            margin: 0;
+            display: inline-block;
+        }
+
+    .btn-action {
+        border-radius: 12px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 900;
+        border: none;
+        text-decoration: none !important;
+        white-space: nowrap;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .btn-view {
+        background: #1db7c1;
+        color: white !important;
+    }
+
+        .btn-view:hover {
+            background: #149da7;
+            color: white !important;
+        }
+
+    .btn-edit {
+        background: #22c58b;
+        color: white !important;
+    }
+
+        .btn-edit:hover {
+            background: #16a974;
+            color: white !important;
+        }
+
+    .btn-delete {
+        background: #ef4444;
+        color: white !important;
+    }
+
+        .btn-delete:hover {
+            background: #dc2626;
+            color: white !important;
+        }
+
+    .footer-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 22px;
+    }
+
+    .btn-back {
+        background: #e2e8f0;
+        color: #334155 !important;
+    }
+
+        .btn-back:hover {
+            background: #cbd5e1;
+            color: #0f172a !important;
+        }
+
+    .btn-company-edit {
+        background: #22c58b;
+        color: white !important;
+        box-shadow: 0 10px 22px rgba(34, 197, 139, .22);
+    }
+
+        .btn-company-edit:hover {
+            background: #16a974;
+            color: white !important;
+        }
+
+    .empty-box {
+        text-align: center;
+        padding: 45px 20px;
+        color: #64748b;
+    }
+
+        .empty-box h4 {
+            color: #0f172a;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+    .swal2-popup {
+        border-radius: 22px !important;
+        padding: 28px !important;
+    }
+
+    .swal2-title {
+        color: #0f172a !important;
+        font-weight: 900 !important;
+    }
+
+    .swal2-html-container {
+        color: #475569 !important;
+        font-weight: 600 !important;
+    }
+
+    .swal2-confirm {
+        background: #ef4444 !important;
+        border-radius: 12px !important;
+        font-weight: 900 !important;
+        padding: 10px 20px !important;
+    }
+
+    .swal2-cancel {
+        background: #e2e8f0 !important;
+        color: #334155 !important;
+        border-radius: 12px !important;
+        font-weight: 900 !important;
+        padding: 10px 20px !important;
+    }
+
+    @@media (max-width: 768px) {
+        .empresa-detail-header {
+            text-align: center;
+            justify-content: center;
+        }
+
+            .empresa-detail-header h2 {
+                font-size: 28px;
+            }
+
+        .empresa-profile {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+            .actions a,
+            .actions button,
+            .actions form {
+                width: 100%;
+                text-align: center;
+            }
+
+        .footer-actions {
+            justify-content: center;
+        }
+
+            .footer-actions a {
+                width: 100%;
+                text-align: center;
+            }
+    }
+</style>
+
+<div class="empresa-detail-page">
+
+    <div class="empresa-detail-header">
+        <div>
+            <h2>@Model.Nombre</h2>
+            <p>Detalle de empresa y contactos registrados.</p>
+        </div>
+
+        <div class="header-actions">
+            <a href="@Url.Action("Create", "Contactos", new { entidadId = Model.Id })" class="btn btn-primary btn-rounded">
+                Nuevo contacto
+            </a>
+
+            <a href="@Url.Action("Index", "Entidades")" class="btn btn-default btn-rounded">
+                Volver
+            </a>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <div class="empresa-profile">
+            <div class="empresa-avatar">
+                @(string.IsNullOrWhiteSpace(Model.Nombre) ? "E" : Model.Nombre.Substring(0, 1).ToUpper())
+            </div>
+
+            <div>
+                <div class="empresa-title">@Model.Nombre</div>
+
+                <div class="empresa-subtitle">
+                    @(string.IsNullOrWhiteSpace(Model.Ruc) ? "Sin RUC registrado" : "RUC: " + Model.Ruc)
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Datos de la empresa</div>
+
+        <div class="detail-grid">
+            <div class="detail-item">
+                <div class="detail-label">Empresa</div>
+                <div class="detail-value">@Model.Nombre</div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">RUC</div>
+                <div class="detail-value">
+                    @if (!string.IsNullOrWhiteSpace(Model.Ruc))
+                    {
+                        @Model.Ruc
+                    }
+                    else
+                    {
+                        <span class="text-muted-small">Sin RUC</span>
+                    }
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Dirección</div>
+                <div class="detail-value">
+                    @if (!string.IsNullOrWhiteSpace(Model.Direccion))
+                    {
+                        @Model.Direccion
+                    }
+                    else
+                    {
+                        <span class="text-muted-small">Sin dirección registrada</span>
+                    }
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Correo</div>
+                <div class="detail-value">
+                    @if (!string.IsNullOrWhiteSpace(Model.Email))
+                    {
+                        <a href="mailto:@Model.Email">@Model.Email</a>
+                    }
+                    else
+                    {
+                        <span class="text-muted-small">Sin correo registrado</span>
+                    }
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Teléfono</div>
+                <div class="detail-value">
+                    @if (!string.IsNullOrWhiteSpace(Model.Telefono))
+                    {
+                        @Model.Telefono
+                    }
+                    else
+                    {
+                        <span class="text-muted-small">Sin teléfono registrado</span>
+                    }
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Estado</div>
+                <div class="detail-value">
+                    @if (Model.Activo)
+                    {
+                        <span class="badge-custom badge-activo">Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge-custom badge-inactivo">Inactivo</span>
+                    }
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Fecha de registro</div>
+                <div class="detail-value">
+                    @string.Format("{0:dd/MM/yyyy HH:mm}", Model.FechaRegistro)
+                </div>
+            </div>
+
+            <div class="detail-item">
+                <div class="detail-label">Contactos registrados</div>
+                <div class="detail-value">
+                    @(Model.Contactos != null ? Model.Contactos.Count : 0)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="detail-card">
+        <div class="contactos-header-card">
+            <div>
+                <div class="section-title" style="margin-bottom: 6px;">Contactos de la empresa</div>
+                <div class="contactos-count">
+                    @(Model.Contactos != null ? Model.Contactos.Count : 0) contacto(s) registrados
+                </div>
+            </div>
+
+            <a href="@Url.Action("Create", "Contactos", new { entidadId = Model.Id })" class="btn-action btn-view">
+                Nuevo contacto
+            </a>
+        </div>
+
+        @if (Model.Contactos != null && Model.Contactos.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-contactos">
+                    <thead>
+                        <tr>
+                            <th>Contacto</th>
+                            <th>Cargo</th>
+                            <th>Correo</th>
+                            <th>Teléfono</th>
+                            <th>Tipo</th>
+                            <th>Estado</th>
+                            <th>Fecha registro</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var contacto in Model.Contactos.OrderByDescending(c => c.EsPrincipal).ThenBy(c => c.Nombre))
+                        {
+                            <tr>
+                                <td>
+                                    <div class="contacto-name">@contacto.Nombre</div>
+                                </td>
+
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(contacto.Cargo))
+                                    {
+                                        <div class="cargo-name">@contacto.Cargo</div>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted-small">Sin cargo</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <div class="contacto-email">
+                                        @if (!string.IsNullOrWhiteSpace(contacto.Email))
+                                        {
+                                            <a href="mailto:@contacto.Email">@contacto.Email</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted-small">Sin correo</span>
+                                        }
+                                    </div>
+                                </td>
+
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(contacto.Telefono))
+                                    {
+                                        @contacto.Telefono
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted-small">Sin teléfono</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (contacto.EsPrincipal)
+                                    {
+                                        <span class="badge-custom badge-principal">Principal</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-custom badge-secundario">Secundario</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @if (contacto.Activo)
+                                    {
+                                        <span class="badge-custom badge-activo">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-custom badge-inactivo">Inactivo</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @string.Format("{0:dd/MM/yyyy}", contacto.FechaRegistro)
+                                    <div class="text-muted-small">
+                                        @string.Format("{0:HH:mm}", contacto.FechaRegistro)
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="actions">
+                                        <a href="@Url.Action("Details", "Contactos", new { id = contacto.Id })"
+                                           class="btn-action btn-view">
+                                            Ver
+                                        </a>
+
+                                        <a href="@Url.Action("Edit", "Contactos", new { id = contacto.Id })"
+                                           class="btn-action btn-edit">
+                                            Editar
+                                        </a>
+
+                                        @using (Html.BeginForm("Delete", "Contactos", new { id = contacto.Id }, FormMethod.Post, new { @class = "form-eliminar-contacto" }))
+                                        {
+                                            @Html.AntiForgeryToken()
+
+                                            <button type="submit" class="btn-action btn-delete">
+                                                Eliminar
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-box">
+                <h4>No hay contactos registrados</h4>
+                <p>Agrega contactos para que puedan registrar tickets asociados a esta empresa.</p>
+
+                <a href="@Url.Action("Create", "Contactos", new { entidadId = Model.Id })" class="btn-action btn-view">
+                    Registrar primer contacto
+                </a>
+            </div>
+        }
+    </div>
+
+    <div class="footer-actions">
+        <a href="@Url.Action("Index", "Entidades")" class="btn-action btn-back">
+            Volver a empresas
+        </a>
+
+        <a href="@Url.Action("Edit", "Entidades", new { id = Model.Id })" class="btn-action btn-company-edit">
+            Editar empresa
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        $(document).ready(function () {
+            $(".form-eliminar-contacto").on("submit", function (e) {
+                e.preventDefault();
+
+                var form = this;
+
+                Swal.fire({
+                    title: "¿Eliminar contacto?",
+                    text: "Esta acción no se puede deshacer.",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Sí, eliminar",
+                    cancelButtonText: "Cancelar",
+                    reverseButtons: true,
+                    focusCancel: true,
+                    background: "#ffffff",
+                    color: "#0f172a"
+                }).then(function (result) {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+}

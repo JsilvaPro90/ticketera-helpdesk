@@ -1,0 +1,726 @@
+﻿@model Ticketera.Models.ViewModels.DashboardViewModel
+
+@{
+    ViewBag.Title = "Dashboard";
+}
+
+<style>
+    :root {
+        --bg-page: #f4f7fb;
+        --primary: #2563eb;
+        --primary-dark: #1e40af;
+        --secondary: #7c3aed;
+        --accent: #06b6d4;
+        --dark: #0f172a;
+        --card: #ffffff;
+        --border: #dbeafe;
+        --muted: #64748b;
+        --success: #22c55e;
+        --warning: #f59e0b;
+        --danger: #ef4444;
+    }
+
+    body {
+        background: var(--bg-page) !important;
+    }
+
+    /* ==========================
+       NAVBAR / MENÚ SUPERIOR
+       ========================== */
+
+    .navbar,
+    .navbar-inverse,
+    .navbar-fixed-top {
+        background: var(--dark) !important;
+        border: none !important;
+        border-bottom: 3px solid var(--primary) !important;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
+    }
+
+        .navbar-brand,
+        .navbar-inverse .navbar-brand {
+            color: #ffffff !important;
+            font-weight: 900 !important;
+        }
+
+        .navbar-nav > li > a,
+        .navbar-inverse .navbar-nav > li > a {
+            color: #e5e7eb !important;
+            font-weight: 700;
+            border-radius: 18px;
+            margin: 8px 3px;
+            padding: 9px 14px !important;
+            transition: all .2s ease;
+        }
+
+            .navbar-nav > li > a:hover,
+            .navbar-inverse .navbar-nav > li > a:hover {
+                background: rgba(37, 99, 235, 0.25) !important;
+                color: #ffffff !important;
+            }
+
+        .navbar-nav > .active > a,
+        .navbar-inverse .navbar-nav > .active > a {
+            background: var(--primary) !important;
+            color: #ffffff !important;
+        }
+
+    /* ==========================
+       DASHBOARD GENERAL
+       ========================== */
+
+    .dashboard-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .dashboard-header {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: white;
+        border-radius: 22px;
+        padding: 34px 36px;
+        margin-bottom: 25px;
+        box-shadow: 0 18px 42px rgba(37, 99, 235, 0.28);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+        .dashboard-header h2 {
+            margin: 0;
+            font-weight: 900;
+            font-size: 34px;
+            color: #ffffff;
+        }
+
+        .dashboard-header p {
+            margin: 8px 0 0 0;
+            color: #e0e7ff;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+    .dashboard-actions {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-rounded {
+        border-radius: 14px;
+        padding: 10px 18px;
+        font-weight: 900;
+        transition: all .2s ease;
+    }
+
+    .dashboard-header .btn-primary {
+        background: #ffffff;
+        color: var(--primary);
+        border: none;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+    }
+
+        .dashboard-header .btn-primary:hover {
+            background: #eff6ff;
+            color: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+    .dashboard-header .btn-default {
+        background: rgba(255,255,255,.16);
+        color: white;
+        border: 1px solid rgba(255,255,255,.35);
+    }
+
+        .dashboard-header .btn-default:hover {
+            background: rgba(255,255,255,.25);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+    /* ==========================
+       CARDS DE MÉTRICAS
+       ========================== */
+
+    .metric-card {
+        background: var(--card);
+        border-radius: 18px;
+        padding: 22px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        border: 1px solid var(--border);
+        transition: all .2s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+        .metric-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 5px;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .metric-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 14px 30px rgba(15, 23, 42, 0.13);
+        }
+
+    .metric-title {
+        color: var(--muted);
+        font-weight: 900;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .metric-number {
+        font-size: 34px;
+        font-weight: 900;
+        color: var(--dark);
+    }
+
+    /* ==========================
+       CARDS DE GRÁFICOS / TABLA
+       ========================== */
+
+    .dashboard-card {
+        background: var(--card);
+        border-radius: 18px;
+        padding: 22px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+        border: 1px solid var(--border);
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 900;
+        color: var(--dark);
+        margin-bottom: 18px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .chart-box {
+        position: relative;
+        min-height: 330px;
+    }
+
+        .chart-box canvas {
+            width: 100% !important;
+            max-height: 330px;
+        }
+
+    /* ==========================
+       TABLA
+       ========================== */
+
+    .table-custom thead th {
+        background: #f8fafc;
+        color: #334155;
+        font-weight: 900;
+        white-space: nowrap;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .table-custom tbody td {
+        vertical-align: middle;
+        color: #334155;
+        font-weight: 600;
+    }
+
+    .table-custom tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .ticket-title {
+        font-weight: 900;
+        color: var(--dark);
+    }
+
+    .badge-custom {
+        display: inline-block;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
+    }
+
+    /* Estados */
+    .badge-abierto {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .badge-proceso {
+        background: #ede9fe;
+        color: #6d28d9;
+    }
+
+    .badge-pendiente {
+        background: #cffafe;
+        color: #0e7490;
+    }
+
+    .badge-resuelto {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .badge-cerrado {
+        background: #e5e7eb;
+        color: #374151;
+    }
+
+    /* Urgencias */
+    .badge-urgencia {
+        background: #e0f2fe;
+        color: #0369a1;
+    }
+
+    .badge-urgencia-muy-alta {
+        background: #fee2e2;
+        color: #b91c1c;
+    }
+
+    .badge-urgencia-alta {
+        background: #ffedd5;
+        color: #c2410c;
+    }
+
+    .badge-urgencia-media {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .badge-urgencia-baja {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .empty-box {
+        text-align: center;
+        padding: 35px;
+        color: var(--muted);
+        font-weight: 700;
+    }
+
+    .btn-xs-custom {
+        border-radius: 10px;
+        padding: 7px 11px;
+        font-size: 12px;
+        font-weight: 900;
+        background: var(--primary);
+        color: #ffffff !important;
+        border: none;
+    }
+
+        .btn-xs-custom:hover {
+            background: var(--primary-dark);
+            color: #ffffff !important;
+        }
+
+    @@media (max-width: 768px) {
+        .dashboard-header {
+            text-align: center;
+            justify-content: center;
+        }
+
+            .dashboard-header h2 {
+                font-size: 28px;
+            }
+
+        .dashboard-actions {
+            justify-content: center;
+        }
+    }
+</style>
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+        <div>
+            <h2>Dashboard de tickets</h2>
+            <p>Resumen general de tickets por estado, empresa, técnico y urgencia.</p>
+        </div>
+
+        <div class="dashboard-actions">
+            <a href="@Url.Action("Create", "Tickets")" class="btn btn-primary btn-rounded">
+                Nuevo ticket
+            </a>
+
+            <a href="@Url.Action("Index", "Tickets")" class="btn btn-default btn-rounded">
+                Ver tickets
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-title">Total de tickets</div>
+                <div class="metric-number">@Model.TotalTickets</div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-title">Abiertos</div>
+                <div class="metric-number">@Model.TicketsAbiertos</div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-title">Muy alta urgencia</div>
+                <div class="metric-number">@Model.TicketsMuyAlta</div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="metric-card">
+                <div class="metric-title">Sin asignar</div>
+                <div class="metric-number">@Model.TicketsSinAsignar</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="dashboard-card">
+                <div class="section-title">Tickets por estado</div>
+
+                <div class="chart-box">
+                    <canvas id="chartEstados"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="dashboard-card">
+                <div class="section-title">Tickets por urgencia</div>
+
+                <div class="chart-box">
+                    <canvas id="chartUrgencias"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="dashboard-card">
+                <div class="section-title">Tickets por empresa</div>
+
+                <div class="chart-box">
+                    <canvas id="chartEmpresas"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="dashboard-card">
+                <div class="section-title">Tickets por técnico</div>
+
+                <div class="chart-box">
+                    <canvas id="chartTecnicos"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="dashboard-card">
+        <div class="section-title">Últimos tickets registrados</div>
+
+        @if (Model.UltimosTickets != null && Model.UltimosTickets.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-custom">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Ticket</th>
+                            <th>Empresa</th>
+                            <th>Contacto</th>
+                            <th>Técnico</th>
+                            <th>Estado</th>
+                            <th>Urgencia</th>
+                            <th>Apertura</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var ticket in Model.UltimosTickets)
+                        {
+                            var estadoClase = "badge-cerrado";
+
+                            if (ticket.Estado == "Abierto")
+                            {
+                                estadoClase = "badge-abierto";
+                            }
+                            else if (ticket.Estado == "En proceso")
+                            {
+                                estadoClase = "badge-proceso";
+                            }
+                            else if (ticket.Estado == "Pendiente")
+                            {
+                                estadoClase = "badge-pendiente";
+                            }
+                            else if (ticket.Estado == "Resuelto")
+                            {
+                                estadoClase = "badge-resuelto";
+                            }
+
+                            var urgenciaClase = "badge-urgencia";
+
+                            if (ticket.Urgencia == "Muy alta")
+                            {
+                                urgenciaClase = "badge-urgencia-muy-alta";
+                            }
+                            else if (ticket.Urgencia == "Alta")
+                            {
+                                urgenciaClase = "badge-urgencia-alta";
+                            }
+                            else if (ticket.Urgencia == "Media")
+                            {
+                                urgenciaClase = "badge-urgencia-media";
+                            }
+                            else if (ticket.Urgencia == "Baja")
+                            {
+                                urgenciaClase = "badge-urgencia-baja";
+                            }
+
+                            <tr>
+                                <td><strong>#@ticket.Id</strong></td>
+
+                                <td>
+                                    <div class="ticket-title">@ticket.Titulo</div>
+                                </td>
+
+                                <td>@ticket.Empresa</td>
+                                <td>@ticket.Contacto</td>
+                                <td>@ticket.Tecnico</td>
+
+                                <td>
+                                    <span class="badge-custom @estadoClase">
+                                        @ticket.Estado
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="badge-custom @urgenciaClase">
+                                        @ticket.Urgencia
+                                    </span>
+                                </td>
+
+                                <td>@ticket.FechaApertura.ToString("dd/MM/yyyy HH:mm")</td>
+
+                                <td>
+                                    <a href="@Url.Action("Details", "Tickets", new { id = ticket.Id })"
+                                       class="btn btn-info btn-xs-custom">
+                                        Ver
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-box">
+                Todavía no hay tickets registrados.
+            </div>
+        }
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        var estadosLabels = @Html.Raw(Json.Encode(Model.TicketsPorEstado.Select(x => x.Nombre)));
+        var estadosData = @Html.Raw(Json.Encode(Model.TicketsPorEstado.Select(x => x.Cantidad)));
+
+        var urgenciasLabels = @Html.Raw(Json.Encode(Model.TicketsPorUrgencia.Select(x => x.Nombre)));
+        var urgenciasData = @Html.Raw(Json.Encode(Model.TicketsPorUrgencia.Select(x => x.Cantidad)));
+
+        var empresasLabels = @Html.Raw(Json.Encode(Model.TicketsPorEmpresa.Select(x => x.Nombre)));
+        var empresasData = @Html.Raw(Json.Encode(Model.TicketsPorEmpresa.Select(x => x.Cantidad)));
+
+        var tecnicosLabels = @Html.Raw(Json.Encode(Model.TicketsPorTecnico.Select(x => x.Nombre)));
+        var tecnicosData = @Html.Raw(Json.Encode(Model.TicketsPorTecnico.Select(x => x.Cantidad)));
+
+        var coloresEstado = [
+            "#2563eb",
+            "#7c3aed",
+            "#06b6d4",
+            "#22c55e",
+            "#64748b"
+        ];
+
+        var coloresUrgencia = [
+            "#ef4444",
+            "#f59e0b",
+            "#2563eb",
+            "#22c55e"
+        ];
+
+        var coloresBarras = [
+            "#2563eb",
+            "#7c3aed",
+            "#06b6d4",
+            "#22c55e",
+            "#f59e0b",
+            "#ef4444",
+            "#64748b",
+            "#0ea5e9"
+        ];
+
+        Chart.defaults.font.family = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+        Chart.defaults.color = "#475569";
+
+        function crearGraficoDona(id, labels, data, titulo, colores) {
+            new Chart(document.getElementById(id), {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: titulo,
+                        data: data,
+                        backgroundColor: colores,
+                        borderColor: "#ffffff",
+                        borderWidth: 3,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: "62%",
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                usePointStyle: true,
+                                pointStyle: 'circle',
+                                padding: 18,
+                                color: "#334155",
+                                font: {
+                                    weight: '700'
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: "#0f172a",
+                            titleColor: "#ffffff",
+                            bodyColor: "#ffffff",
+                            padding: 12,
+                            cornerRadius: 10
+                        }
+                    }
+                }
+            });
+        }
+
+        function crearGraficoBarras(id, labels, data, titulo) {
+            new Chart(document.getElementById(id), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: titulo,
+                        data: data,
+                        backgroundColor: labels.map(function (_, index) {
+                            return coloresBarras[index % coloresBarras.length];
+                        }),
+                        borderRadius: 10,
+                        borderSkipped: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: "#0f172a",
+                            titleColor: "#ffffff",
+                            bodyColor: "#ffffff",
+                            padding: 12,
+                            cornerRadius: 10
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: "#475569",
+                                font: {
+                                    weight: "700"
+                                }
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: "#e2e8f0"
+                            },
+                            ticks: {
+                                precision: 0,
+                                color: "#475569",
+                                font: {
+                                    weight: "700"
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        crearGraficoDona(
+            'chartEstados',
+            estadosLabels,
+            estadosData,
+            'Tickets por estado',
+            coloresEstado
+        );
+
+        crearGraficoDona(
+            'chartUrgencias',
+            urgenciasLabels,
+            urgenciasData,
+            'Tickets por urgencia',
+            coloresUrgencia
+        );
+
+        crearGraficoBarras(
+            'chartEmpresas',
+            empresasLabels,
+            empresasData,
+            'Tickets por empresa'
+        );
+
+        crearGraficoBarras(
+            'chartTecnicos',
+            tecnicosLabels,
+            tecnicosData,
+            'Tickets por técnico'
+        );
+    </script>
+}

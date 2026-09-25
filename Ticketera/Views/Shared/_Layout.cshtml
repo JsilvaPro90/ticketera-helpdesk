@@ -1,0 +1,351 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@ViewBag.Title - Ticketera</title>
+
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+    <style>
+        body {
+            margin: 0;
+            background: #f5fcfc;
+            color: #1e293b;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .app-topbar {
+            width: 100%;
+            background: #0f172a;
+            box-shadow: 0 10px 28px rgba(15, 23, 42, .35);
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            border-bottom: 3px solid #22c58b;
+        }
+
+        .app-nav {
+            max-width: 1400px;
+            margin: 0 auto;
+            min-height: 76px;
+            padding: 0 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #ffffff;
+            text-decoration: none !important;
+            font-size: 28px;
+            font-weight: 900;
+            letter-spacing: .2px;
+            white-space: nowrap;
+        }
+
+            .brand-link:hover {
+                color: #ffffff;
+                text-decoration: none;
+            }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 13px;
+            background: rgba(255,255,255,.20);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 19px;
+            font-weight: 900;
+            color: #ffffff;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,.20);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex: 1;
+        }
+
+        .nav-link-custom {
+            color: rgba(255,255,255,.92);
+            text-decoration: none !important;
+            padding: 10px 15px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 700;
+            transition: all .22s ease;
+            white-space: nowrap;
+        }
+
+            .nav-link-custom:hover {
+                color: #ffffff;
+                background: rgba(255,255,255,.14);
+                text-decoration: none;
+            }
+
+            .nav-link-custom.active {
+                color: #ffffff;
+                background: rgba(255,255,255,.22);
+                box-shadow: inset 0 0 0 1px rgba(255,255,255,.15);
+            }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+        }
+
+        .user-mini {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #ffffff;
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.22);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 900;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,.22);
+        }
+
+        .user-data {
+            line-height: 1.1;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: rgba(255,255,255,.82);
+            margin-top: 3px;
+        }
+
+        .btn-nav-outline {
+            color: #ffffff !important;
+            border: 1px solid rgba(255,255,255,.60);
+            padding: 9px 16px;
+            border-radius: 999px;
+            text-decoration: none !important;
+            font-weight: 700;
+            transition: all .22s ease;
+        }
+
+            .btn-nav-outline:hover {
+                background: rgba(255,255,255,.14);
+                color: #ffffff !important;
+                text-decoration: none;
+            }
+
+        .btn-nav-solid {
+            background: #ffffff;
+            color: #13adb8 !important;
+            padding: 9px 16px;
+            border-radius: 999px;
+            text-decoration: none !important;
+            font-weight: 800;
+            box-shadow: 0 8px 18px rgba(15, 23, 42, .10);
+            transition: all .22s ease;
+        }
+
+            .btn-nav-solid:hover {
+                background: #f8ffff;
+                color: #0f9ea8 !important;
+                transform: translateY(-1px);
+                text-decoration: none;
+            }
+
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 28px 18px;
+        }
+
+        footer {
+            max-width: 1400px;
+            margin: 30px auto 0;
+            padding: 20px 18px;
+            border-top: 1px solid #dbe7ea;
+            color: #64748b;
+        }
+
+        @@media (max-width: 1000px) {
+            .app-nav {
+                flex-wrap: wrap;
+                padding: 16px 20px;
+            }
+
+            .brand-link {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-menu {
+                order: 2;
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .nav-actions {
+                order: 3;
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .user-mini {
+                justify-content: center;
+            }
+        }
+
+        @@media (max-width: 600px) {
+            .brand-link {
+                font-size: 24px;
+            }
+
+            .nav-link-custom {
+                padding: 9px 12px;
+                font-size: 13px;
+            }
+
+            .user-data {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    @{
+        var controller = ViewContext.RouteData.Values["controller"] != null
+            ? ViewContext.RouteData.Values["controller"].ToString()
+            : "";
+
+        var rol = Session["Rol"] != null ? Session["Rol"].ToString() : "";
+
+        var nombre = Session["NombreCompleto"] != null
+            ? Session["NombreCompleto"].ToString()
+            : User.Identity.Name;
+
+        Func<string, string> activo = c =>
+            controller.Equals(c, StringComparison.OrdinalIgnoreCase) ? "active" : "";
+    }
+
+    <header class="app-topbar">
+        <nav class="app-nav">
+
+            <a href="@Url.Action("Index", "Home")" class="brand-link">
+                <span class="brand-icon">T</span>
+                <span>Ticketera</span>
+            </a>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="nav-menu">
+
+                    <a href="@Url.Action("Index", "Home")" class="nav-link-custom @activo("Home")">
+                        🏠 Inicio
+                    </a>
+
+                    <a href="@Url.Action("Index", "Tickets")" class="nav-link-custom @activo("Tickets")">
+                        🎫 Tickets
+                    </a>
+
+                    @if (rol == "Admin" || rol == "Tecnico")
+                    {
+                        <a href="@Url.Action("Index", "Entidades")" class="nav-link-custom @activo("Entidades")">
+                            🏢 Empresas
+                        </a>
+
+                        <a href="@Url.Action("Index", "Contactos")" class="nav-link-custom @activo("Contactos")">
+                            👥 Contactos
+                        </a>
+
+                        <a href="@Url.Action("Index", "Usuarios")" class="nav-link-custom @activo("Usuarios")">
+                            ⚙️ Usuarios
+                        </a>
+                    }
+
+                    @if (rol == "Admin")
+                    {
+                        <a href="@Url.Action("Index", "Importacion")" class="nav-link-custom @activo("Importacion")">
+                            📥 Importar Excel
+                        </a>
+                    }
+
+                </div>
+
+                <div class="nav-actions">
+                    <div class="user-mini">
+                        <div class="user-avatar">
+                            @(string.IsNullOrWhiteSpace(nombre) ? "U" : nombre.Substring(0, 1).ToUpper())
+                        </div>
+
+                        <div class="user-data">
+                            <div class="user-name">@nombre</div>
+                            <div class="user-role">@rol</div>
+                        </div>
+                    </div>
+
+                    <a href="@Url.Action("Logout", "Account")" class="btn-nav-outline">
+                        Cerrar sesión
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="nav-menu">
+                    <a href="#" class="nav-link-custom">Características</a>
+                    <a href="#" class="nav-link-custom">Acerca de</a>
+                    <a href="#" class="nav-link-custom">FAQ</a>
+                </div>
+
+                <div class="nav-actions">
+                    <a href="@Url.Action("Login", "Account")" class="btn-nav-outline">
+                        Iniciar sesión
+                    </a>
+
+                    <a href="@Url.Action("Register", "Account")" class="btn-nav-solid">
+                        Crear cuenta
+                    </a>
+                </div>
+            }
+
+        </nav>
+    </header>
+
+    <div class="main-content">
+        @RenderBody()
+    </div>
+
+    <footer>
+        <p>&copy; @DateTime.Now.Year - Sistema de Tickets</p>
+    </footer>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,5 @@
+﻿Compilación iniciada a las 13:31...
+1>------ Operación Compilar iniciada: Proyecto: Ticketera, configuración: Debug Any CPU ------
+1>  Ticketera -> C:\Users\sc_11\Desktop\INNOVATEC\Ticketera\bin\Ticketera.dll
+========== Compilación: 1 correcto, 0 erróneo, 1 actualizado, 0 omitido ==========
+========== Compilar completado a las 13:31 y tardó 00.581 segundos ==========

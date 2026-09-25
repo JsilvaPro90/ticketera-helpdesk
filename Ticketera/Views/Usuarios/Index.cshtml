@@ -1,0 +1,424 @@
+﻿@model IEnumerable<Ticketera.Models.Usuario>
+
+@{
+    ViewBag.Title = "Usuarios";
+    var rolSesion = Session["Rol"] != null ? Session["Rol"].ToString() : "";
+}
+
+<style>
+    .usuarios-page {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0;
+    }
+
+    .usuarios-header {
+        background: linear-gradient(135deg, #1db7c1 0%, #22c58b 100%);
+        color: white;
+        border-radius: 22px;
+        padding: 34px 36px;
+        margin-bottom: 25px;
+        box-shadow: 0 16px 38px rgba(15, 23, 42, 0.16);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+        .usuarios-header h2 {
+            margin: 0;
+            font-weight: 900;
+            font-size: 34px;
+        }
+
+        .usuarios-header p {
+            margin: 8px 0 0 0;
+            opacity: .95;
+            font-size: 15px;
+        }
+
+    .usuarios-actions-header {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .btn-rounded {
+        border-radius: 14px;
+        padding: 10px 18px;
+        font-weight: 800;
+    }
+
+    .usuarios-header .btn-primary {
+        background: #ffffff;
+        color: #13adb8;
+        border: none;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+    }
+
+        .usuarios-header .btn-primary:hover {
+            background: #f8ffff;
+            color: #0f9ea8;
+        }
+
+    .usuarios-card {
+        background: #ffffff;
+        border-radius: 22px;
+        padding: 24px;
+        border: 1px solid #dbeafe;
+        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+    }
+
+    .table-usuarios {
+        margin-bottom: 0;
+    }
+
+        .table-usuarios thead th {
+            background: #f8fafc;
+            color: #334155;
+            font-weight: 900;
+            white-space: nowrap;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 14px 12px;
+        }
+
+        .table-usuarios tbody td {
+            vertical-align: middle;
+            padding: 15px 12px;
+            border-top: 1px solid #e5e7eb;
+            color: #0f172a;
+        }
+
+    .usuario-name {
+        font-weight: 900;
+        color: #0f172a;
+        white-space: nowrap;
+    }
+
+    .usuario-fullname {
+        font-weight: 700;
+        color: #1e293b;
+    }
+
+    .usuario-email a {
+        color: #0e7490;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+        .usuario-email a:hover {
+            text-decoration: underline;
+        }
+
+    .text-muted-small {
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .badge-custom {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 82px;
+        padding: 7px 13px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
+        border: 1px solid transparent;
+        letter-spacing: .2px;
+    }
+
+    /* ADMIN - Rojo suave */
+    .badge-admin {
+        background: #fee2e2;
+        color: #991b1b;
+        border-color: #fecaca;
+    }
+
+    /* CLIENTE - Azul */
+    .badge-cliente {
+        background: #dbeafe;
+        color: #1d4ed8;
+        border-color: #bfdbfe;
+    }
+
+    /* TÉCNICO - Naranja */
+    .badge-tecnico {
+        background: #fef3c7;
+        color: #92400e;
+        border-color: #fde68a;
+    }
+
+    /* ROL NO IDENTIFICADO */
+    .badge-otro {
+        background: #f1f5f9;
+        color: #334155;
+        border-color: #cbd5e1;
+    }
+
+    .badge-activo {
+        background: #dcfce7;
+        color: #166534;
+        border-color: #bbf7d0;
+    }
+
+    .badge-inactivo {
+        background: #fee2e2;
+        color: #991b1b;
+        border-color: #fecaca;
+    }
+
+    .usuario-actions {
+        display: flex;
+        gap: 7px;
+        flex-wrap: nowrap;
+        align-items: center;
+    }
+
+        .usuario-actions form {
+            margin: 0;
+        }
+
+    .btn-action {
+        border-radius: 12px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 900;
+        border: none;
+        text-decoration: none !important;
+        white-space: nowrap;
+        display: inline-block;
+        cursor: pointer;
+    }
+
+    .btn-edit {
+        background: #22c58b;
+        color: white !important;
+    }
+
+        .btn-edit:hover {
+            background: #16a974;
+            color: white !important;
+        }
+
+    .btn-password {
+        background: #1db7c1;
+        color: white !important;
+    }
+
+        .btn-password:hover {
+            background: #149da7;
+            color: white !important;
+        }
+
+    .alert-custom {
+        border-radius: 14px;
+        padding: 14px 18px;
+        font-weight: 700;
+    }
+
+    .empty-box {
+        text-align: center;
+        padding: 55px 20px;
+        color: #64748b;
+    }
+
+        .empty-box h4 {
+            color: #0f172a;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+    @@media (max-width: 768px) {
+        .usuarios-header {
+            text-align: center;
+            justify-content: center;
+        }
+
+            .usuarios-header h2 {
+                font-size: 28px;
+            }
+
+        .usuarios-actions-header {
+            justify-content: center;
+        }
+
+        .usuario-actions {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+            .usuario-actions form,
+            .usuario-actions button,
+            .usuario-actions a {
+                width: 100%;
+                text-align: center;
+            }
+    }
+</style>
+
+<div class="usuarios-page">
+
+    <div class="usuarios-header">
+        <div>
+            <h2>Usuarios</h2>
+
+            @if (rolSesion == "Tecnico")
+            {
+                <p>Administra los usuarios clientes asociados a empresas.</p>
+            }
+            else
+            {
+                <p>Administra usuarios administradores, técnicos y clientes.</p>
+            }
+        </div>
+
+        <div class="usuarios-actions-header">
+            <a href="@Url.Action("Create", "Usuarios")" class="btn btn-primary btn-rounded">
+                Nuevo usuario
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Mensaje"] != null)
+    {
+        <div class="alert alert-success alert-custom">
+            @TempData["Mensaje"]
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-custom">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="usuarios-card">
+        @if (Model != null && Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-hover table-usuarios">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Nombre completo</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Fecha registro</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            string rolTexto = item.Rol != null ? item.Rol.Trim() : "";
+                            string rolLower = rolTexto.ToLower();
+                            string rolClase = "badge-otro";
+
+                            if (rolLower == "admin")
+                            {
+                                rolClase = "badge-admin";
+                            }
+                            else if (rolLower == "cliente")
+                            {
+                                rolClase = "badge-cliente";
+                            }
+                            else if (rolLower == "tecnico" || rolLower == "técnico")
+                            {
+                                rolClase = "badge-tecnico";
+                            }
+
+                            <tr>
+                                <td>
+                                    <div class="usuario-name">
+                                        @item.NombreUsuario
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="usuario-fullname">
+                                        @item.NombreCompleto
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="usuario-email">
+                                        @if (!string.IsNullOrWhiteSpace(item.Email))
+                                        {
+                                            <a href="mailto:@item.Email">@item.Email</a>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-muted-small">Sin correo</span>
+                                        }
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="badge-custom @rolClase">
+                                        @rolTexto
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @if (item.Activo)
+                                    {
+                                        <span class="badge-custom badge-activo">Activo</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge-custom badge-inactivo">Inactivo</span>
+                                    }
+                                </td>
+
+                                <td>
+                                    @item.FechaRegistro.ToString("dd/MM/yyyy")
+                                    <div class="text-muted-small">
+                                        @item.FechaRegistro.ToString("HH:mm")
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <div class="usuario-actions">
+                                        <a href="@Url.Action("Edit", "Usuarios", new { id = item.Id })"
+                                           class="btn-action btn-edit">
+                                            Editar
+                                        </a>
+
+                                        @using (Html.BeginForm("EnviarResetPassword", "Usuarios", FormMethod.Post))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            @Html.Hidden("id", item.Id)
+
+                                            <button type="submit"
+                                                    class="btn-action btn-password"
+                                                    onclick="return confirm('¿Enviar enlace para cambio de contraseña a este usuario?');">
+                                                Enviar cambio de clave
+                                            </button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div class="empty-box">
+                <h4>No hay usuarios registrados</h4>
+                <p>Cuando registres usuarios, aparecerán en esta sección.</p>
+
+                <a href="@Url.Action("Create", "Usuarios")" class="btn btn-primary btn-rounded">
+                    Registrar primer usuario
+                </a>
+            </div>
+        }
+    </div>
+</div>

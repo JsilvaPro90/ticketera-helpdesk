@@ -1,5 +1,9 @@
 # Ticketera · Sistema de gestión de tickets para soporte TI
 
+<p align="center">
+  <img src="docs/img/ticketera-banner.png" alt="Ticketera - Sistema de gestión de tickets para soporte TI" width="100%" />
+</p>
+
 <p align="left">
   <img src="https://img.shields.io/badge/C%23-.NET-6A5ACD?style=for-the-badge&logo=csharp&logoColor=white" alt="C#" />
   <img src="https://img.shields.io/badge/ASP.NET-MVC%205-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt="ASP.NET MVC 5" />
@@ -13,7 +17,7 @@ Proyecto académico orientado a construir una **solución web de Mesa de Servici
 🔗 **Enlaces**
 - 🌐 **Portafolio:** [arcan.freedev.app](https://arcan.freedev.app)
 - 💼 **LinkedIn:** [José Gustavo Silva Medrano](https://www.linkedin.com/in/jose-gustavo-silva-medrano/)
-- 👨‍💻 **GitHub:** [@jsilvaPro](https://github.com/jsilvaPro)
+- 👨‍💻 **GitHub:** [@JsilvaPro90](https://github.com/JsilvaPro90)
 
 ---
 
@@ -181,7 +185,7 @@ SQL Server
 1. Clona el repositorio:
 
 ```bash
-git clone https://github.com/jsilvaPro/ticketera-helpdesk.git
+git clone https://github.com/JsilvaPro90/ticketera-helpdesk.git
 ```
 
 2. Abre `Ticketera/Ticketera.sln` en Visual Studio.
@@ -225,7 +229,7 @@ El proyecto continuará evolucionando conforme incorpore nuevas mejoras, refacto
 **José Gustavo Silva Medrano**  
 Estudiante de Ingeniería de Sistemas · Lima, Perú
 
-- **GitHub:** [@jsilvaPro](https://github.com/jsilvaPro)
+- **GitHub:** [@JsilvaPro90](https://github.com/JsilvaPro90)
 - **LinkedIn:** [José Gustavo Silva Medrano](https://www.linkedin.com/in/jose-gustavo-silva-medrano/)
 - **Portafolio:** [arcan.freedev.app](https://arcan.freedev.app)
 
